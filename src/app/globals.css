@@ -1,26 +1,75 @@
 @import "tailwindcss";
 
+/* ── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-plus-jakarta);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme inline {
+  --font-sans: var(--font-plus-jakarta);
+  --font-mono: var(--font-geist-mono);
+
+  /* Brand blue */
+  --color-brand-50:  #EBF5FB;
+  --color-brand-100: #D6EAF8;
+  --color-brand-200: #AED6F1;
+  --color-brand-600: #1B4F72;
+  --color-brand-700: #154360;
+  --color-brand-800: #0E2D42;
+
+  /* Accent orange */
+  --color-accent-50:  #FEF5E7;
+  --color-accent-100: #FDEBD0;
+  --color-accent-500: #E67E22;
+  --color-accent-600: #CA6F1E;
+
+  /* Surface & borders */
+  --color-surface:    #FAFAF8;
+  --color-card-border:#E5E3DF;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FAFAF8;
+  color: #111827;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
+
+main {
+  animation: fade-up 0.3s ease-out both;
+}
+
+/* ── Paw-print SVG background (used in hero) ───────────────────────────── */
+.bg-paw-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cellipse cx='40' cy='55' rx='13' ry='10' fill='%23E67E22' opacity='0.06'/%3E%3Ccircle cx='21' cy='36' r='7' fill='%23E67E22' opacity='0.06'/%3E%3Ccircle cx='34' cy='28' r='6' fill='%23E67E22' opacity='0.06'/%3E%3Ccircle cx='46' cy='28' r='6' fill='%23E67E22' opacity='0.06'/%3E%3Ccircle cx='59' cy='36' r='7' fill='%23E67E22' opacity='0.06'/%3E%3C/svg%3E");
+  background-size: 80px 80px;
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────── */
+@keyframes paw-bounce {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50%       { transform: translateY(-10px) rotate(5deg); }
+}
+
+@keyframes paw-fade-in-out {
+  0%   { opacity: 0; transform: translateY(4px); }
+  15%  { opacity: 1; transform: translateY(0); }
+  85%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-4px); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-paw-bounce   { animation: paw-bounce 1.4s ease-in-out infinite; }
+.animate-paw-message  { animation: paw-fade-in-out 2.8s ease-in-out; }
+.animate-fade-up      { animation: fade-up 0.35s ease-out forwards; }
