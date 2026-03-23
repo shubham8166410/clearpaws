@@ -77,8 +77,8 @@ describe('stripBoilerplate', () => {
 });
 
 describe('DAFF_MONITORED_PAGES', () => {
-  it('has exactly 4 entries', () => {
-    expect(DAFF_MONITORED_PAGES).toHaveLength(4);
+  it('has exactly 7 entries (4 inbound + 3 outbound)', () => {
+    expect(DAFF_MONITORED_PAGES).toHaveLength(7);
   });
 
   it('all entries start with https://www.agriculture.gov.au', () => {

@@ -37,17 +37,25 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       )}
       <main className="flex-1 px-4 py-8 sm:py-12">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-center justify-between mb-8 gap-4">
+          <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
             <div className="min-w-0">
               <h1 className="text-2xl font-bold text-gray-900">Your timelines</h1>
               <p className="text-sm text-gray-500 mt-0.5 truncate">{user.email}</p>
             </div>
-            <Link
-              href="/generate"
-              className="flex-shrink-0 inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors min-h-[44px]"
-            >
-              + New timeline
-            </Link>
+            <div className="flex gap-2 flex-shrink-0">
+              <Link
+                href="/generate"
+                className="inline-flex items-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-3.5 py-2.5 rounded-xl transition-colors min-h-[44px]"
+              >
+                + Inbound
+              </Link>
+              <Link
+                href="/outbound"
+                className="inline-flex items-center gap-1.5 bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold px-3.5 py-2.5 rounded-xl transition-colors min-h-[44px]"
+              >
+                + Outbound
+              </Link>
+            </div>
           </div>
 
           <DashboardTimelines initialTimelines={timelines ?? []} />

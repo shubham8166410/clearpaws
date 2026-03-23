@@ -20,8 +20,18 @@ const ROLE_LABELS: Record<UserRole, string> = {
 const PLAN_PRICE: Record<UserRole, string> = {
   free: "",
   paid_once: "$49 AUD one-time",
-  subscriber: "$9.90 AUD/month",
+  subscriber: "$9.90/mo AUD",
   admin: "",
+};
+
+const UPGRADE_TITLES: Partial<Record<UserRole, string>> = {
+  paid_once: "Unlock your DAFF document pack",
+  subscriber: "Get everything — subscribe for $9.90/mo",
+};
+
+const UPGRADE_BUTTONS: Partial<Record<UserRole, string>> = {
+  paid_once: "Get my document pack — $49 AUD",
+  subscriber: "Subscribe — $9.90/mo AUD",
 };
 
 export function UpgradePrompt({ requiredRole, featureDescription }: UpgradePromptProps) {
@@ -58,12 +68,14 @@ export function UpgradePrompt({ requiredRole, featureDescription }: UpgradePromp
 
   const label = ROLE_LABELS[requiredRole];
   const price = PLAN_PRICE[requiredRole];
+  const title = UPGRADE_TITLES[requiredRole] ?? `${label} plan required`;
+  const buttonLabel = UPGRADE_BUTTONS[requiredRole] ?? `Upgrade to ${label}`;
 
   return (
     <div className="rounded-xl border border-[#E5E3DF] bg-white p-6 shadow-sm text-center max-w-md mx-auto">
       <div className="text-4xl mb-3" aria-hidden>🔒</div>
       <h3 className="text-lg font-semibold text-[#1B4F72] mb-1">
-        {label} plan required
+        {title}
       </h3>
       {featureDescription && (
         <p className="text-sm text-gray-600 mb-4">{featureDescription}</p>
@@ -79,7 +91,7 @@ export function UpgradePrompt({ requiredRole, featureDescription }: UpgradePromp
         disabled={loading}
         className="w-full rounded-lg bg-[#1B4F72] px-4 py-2 text-sm font-semibold text-white hover:bg-[#154060] disabled:opacity-60 transition-colors"
       >
-        {loading ? "Redirecting…" : `Upgrade to ${label}`}
+        {loading ? "Redirecting…" : buttonLabel}
       </button>
     </div>
   );

@@ -24,9 +24,16 @@ function shortHash(hash: string): string {
   return hash.slice(0, 12);
 }
 
+const OUTBOUND_BASE = "/biosecurity-trade/export/controlled-goods/live-animals/companion-and-other-live-animals";
+
 function urlLabel(url: string): string {
   try {
-    return new URL(url).pathname.replace("/biosecurity-trade/cats-dogs", "").replace(/^\//, "") || "cats-dogs (main)";
+    const path = new URL(url).pathname;
+    if (path.startsWith(OUTBOUND_BASE)) {
+      const suffix = path.slice(OUTBOUND_BASE.length).replace(/^\//, "");
+      return `[outbound] ${suffix || "main export page"}`;
+    }
+    return path.replace("/biosecurity-trade/cats-dogs", "").replace(/^\//, "") || "cats-dogs (main)";
   } catch {
     return url;
   }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
@@ -9,9 +9,13 @@ import { Input } from "@/components/ui/Input";
 import { Alert } from "@/components/ui/Alert";
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") ?? "/dashboard";
+  // Validate redirectTo: must be a relative path — reject absolute URLs and
+  // protocol-relative URLs (//evil.com) which browsers treat as absolute.
+  const rawRedirect = searchParams.get("redirectTo") ?? "/dashboard";
+  const redirectTo = rawRedirect.startsWith("/") && !rawRedirect.startsWith("//")
+    ? rawRedirect
+    : "/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,8 +42,7 @@ export function LoginForm() {
       return;
     }
 
-    router.push(redirectTo);
-    router.refresh();
+    window.location.href = redirectTo;
   }
 
   async function handleGoogleLogin() {

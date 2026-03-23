@@ -8,7 +8,7 @@ interface ClientSummary {
   timelineId: string;
   petType: string;
   petBreed: string;
-  originCountry: string;
+  originCountry: string | null;
   travelDate: string;
   totalSteps: number;
   completedSteps: number;

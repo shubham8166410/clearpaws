@@ -21,18 +21,21 @@ export interface RateLimitResult {
   resetAt: Date;
 }
 
-export function checkRateLimit(ip: string): RateLimitResult {
-  if (!ip) {
+// key should be a namespaced string, e.g. `ratelimit:timeline:${ip}`
+// Both /api/generate-timeline and /api/generate-outbound-timeline use the same
+// key prefix so they share the same 5/day bucket per IP.
+export function checkRateLimit(key: string): RateLimitResult {
+  if (!key) {
     return { allowed: false, remaining: 0, resetAt: new Date(Date.now() + WINDOW_MS) };
   }
 
   const now = Date.now();
-  const existing = store.get(ip);
+  const existing = store.get(key);
 
   if (!existing || now >= existing.resetAt) {
     // First request or window has expired — start fresh
     const resetAt = now + WINDOW_MS;
-    store.set(ip, { count: 1, resetAt });
+    store.set(key, { count: 1, resetAt });
     return { allowed: true, remaining: RATE_LIMIT_MAX - 1, resetAt: new Date(resetAt) };
   }
 

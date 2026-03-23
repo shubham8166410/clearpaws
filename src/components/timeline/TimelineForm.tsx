@@ -321,7 +321,7 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
     );
   }
 
-  // Show loading spinner
+  // Show the animated paw spinner with cycling messages while AI generates
   if (state.isSubmitting) {
     return <LottiePawSpinner withMessages size={140} />;
   }
@@ -340,9 +340,9 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
       {state.currentStep === 1 && (
         <div className="flex flex-col gap-5 animate-fade-up">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Tell us about your pet</h2>
+            <h2 className="text-xl font-bold text-gray-900">First, tell us about your pet</h2>
             <p className="text-sm text-gray-500 mt-1">
-              We'll build a personalised DAFF compliance timeline based on your pet's details.
+              Your breed matters — some have extra steps, and some can&apos;t be imported at all. We&apos;ll tell you straight away.
             </p>
           </div>
 
@@ -420,9 +420,9 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
       {state.currentStep === 2 && (
         <div className="flex flex-col gap-5 animate-fade-up">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Where are you moving from?</h2>
+            <h2 className="text-xl font-bold text-gray-900">Which country are you moving from?</h2>
             <p className="text-sm text-gray-500 mt-1">
-              DAFF requirements vary significantly depending on your origin country.
+              Your origin country determines everything — which tests are needed, how long it takes, and what it costs.
             </p>
           </div>
 
@@ -486,9 +486,9 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
       {state.currentStep === 3 && (
         <div className="flex flex-col gap-5 animate-fade-up">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">When do you plan to travel?</h2>
+            <h2 className="text-xl font-bold text-gray-900">When do you want to arrive in Australia?</h2>
             <p className="text-sm text-gray-500 mt-1">
-              We'll calculate exact DAFF compliance deadlines working backwards from this date.
+              We calculate every deadline from this date. If it&apos;s tight, we&apos;ll warn you straight away.
             </p>
           </div>
 
@@ -565,12 +565,12 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
               disabled={!canSubmit}
               size="md"
             >
-              Generate my timeline →
+              Build my compliance plan →
             </Button>
           </div>
 
           <p className="text-xs text-gray-400 text-center">
-            This takes 10–20 seconds while our AI calculates your compliance dates.
+            This takes 10–20 seconds while we calculate your compliance dates.
           </p>
         </div>
       )}

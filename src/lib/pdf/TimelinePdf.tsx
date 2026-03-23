@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
-import type { TimelineRow } from "@/types/database";
+import type { TimelineRow, SavedOutboundSteps } from "@/types/database";
 import type { TimelineStep } from "@/types/timeline";
 import { DAFF_RULES } from "@/lib/daff-rules";
 
@@ -175,9 +175,115 @@ function formatVerifiedMonth(iso: string): string {
   return new Date(iso + "T00:00:00").toLocaleDateString("en-AU", { month: "long", year: "numeric" });
 }
 
+function isOutboundSteps(gs: TimelineRow["generated_steps"]): gs is SavedOutboundSteps {
+  return "direction" in gs && gs.direction === "outbound";
+}
+
+const AUD = new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", minimumFractionDigits: 0 });
+
 export function TimelinePdf({ timeline }: Props) {
   const { generated_steps } = timeline;
-  const steps: TimelineStep[] = generated_steps.steps ?? [];
+  const outbound = isOutboundSteps(generated_steps);
+
+  if (outbound) {
+    // ── Outbound PDF ────────────────────────────────────────────────────────
+    const auSteps = generated_steps.steps.filter((s) => s.section === "au-export");
+    const destSteps = generated_steps.steps.filter((s) => s.section === "destination");
+    const totalCost = generated_steps.steps.reduce((sum, s) => sum + (s.estimatedCostAUD ?? 0), 0);
+
+    return (
+      <Document title="PetBorder Outbound Pet Travel Timeline" author="PetBorder">
+        <Page size="A4" style={styles.page}>
+          <View style={styles.header}>
+            <Text style={styles.title}>PetBorder — Outbound Pet Travel Timeline</Text>
+            <Text style={styles.subtitle}>Generated {formatTodayLong()}</Text>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Trip Details</Text>
+            <View style={styles.infoGrid}>
+              <View style={styles.infoBox}>
+                <Text style={styles.infoLabel}>Pet</Text>
+                <Text style={styles.infoValue}>{timeline.pet_breed} ({timeline.pet_type})</Text>
+              </View>
+              <View style={styles.infoBox}>
+                <Text style={styles.infoLabel}>Destination</Text>
+                <Text style={styles.infoValue}>{generated_steps.destinationName}</Text>
+              </View>
+              <View style={styles.infoBox}>
+                <Text style={styles.infoLabel}>Departure</Text>
+                <Text style={styles.infoValue}>{formatDate(timeline.travel_date)}</Text>
+              </View>
+              <View style={styles.infoBox}>
+                <Text style={styles.infoLabel}>Est. AU export cost</Text>
+                <Text style={styles.infoValue}>{AUD.format(totalCost)}</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Before leaving Australia</Text>
+            {auSteps.map((step, i) => (
+              <View key={step.id} style={styles.stepCard}>
+                <View style={styles.stepHeader}>
+                  <View style={{ flexDirection: "row", alignItems: "flex-start", flex: 1 }}>
+                    <View style={styles.stepNumber}>
+                      <Text style={styles.stepNumberText}>{i + 1}</Text>
+                    </View>
+                    <Text style={styles.stepTitle}>{step.title}</Text>
+                  </View>
+                  <Text style={styles.stepDate}>{formatDate(step.calculatedDate)}</Text>
+                </View>
+                <Text style={styles.stepDescription}>{step.description}</Text>
+                {step.estimatedCostAUD ? (
+                  <Text style={styles.stepCost}>Est. cost: {AUD.format(step.estimatedCostAUD)}</Text>
+                ) : null}
+              </View>
+            ))}
+          </View>
+
+          {destSteps.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Arriving in {generated_steps.destinationName}</Text>
+              {destSteps.map((step, i) => (
+                <View key={step.id} style={styles.stepCard}>
+                  <View style={styles.stepHeader}>
+                    <View style={{ flexDirection: "row", alignItems: "flex-start", flex: 1 }}>
+                      <View style={styles.stepNumber}>
+                        <Text style={styles.stepNumberText}>{auSteps.length + i + 1}</Text>
+                      </View>
+                      <Text style={styles.stepTitle}>{step.title}</Text>
+                    </View>
+                    <Text style={styles.stepDate}>{formatDate(step.calculatedDate)}</Text>
+                  </View>
+                  <Text style={styles.stepDescription}>{step.description}</Text>
+                  {step.estimatedCostAUD ? (
+                    <Text style={styles.stepCost}>Est. cost: {AUD.format(step.estimatedCostAUD)}</Text>
+                  ) : null}
+                </View>
+              ))}
+            </View>
+          )}
+
+          <View style={styles.pageFooter} fixed>
+            <Text>
+              Generated by PetBorder on {formatTodayLong()}.{"\n"}
+              {generated_steps.disclaimer}{"\n"}
+              {"\n"}
+              DAFF export info: agriculture.gov.au | Phone: 1800 900 090
+            </Text>
+            <Text
+              style={{ position: "absolute", bottom: 0, right: 0, fontSize: 7, color: "#9ca3af" }}
+              render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+            />
+          </View>
+        </Page>
+      </Document>
+    );
+  }
+
+  // ── Inbound PDF (original) ───────────────────────────────────────────────
+  const steps: TimelineStep[] = generated_steps.steps as TimelineStep[];
 
   return (
     <Document title="PetBorder DAFF Compliance Timeline" author="PetBorder">
@@ -200,11 +306,11 @@ export function TimelinePdf({ timeline }: Props) {
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoLabel}>Origin</Text>
-              <Text style={styles.infoValue}>{timeline.origin_country}</Text>
+              <Text style={styles.infoValue}>{timeline.origin_country ?? "—"}</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoLabel}>DAFF Group</Text>
-              <Text style={styles.infoValue}>Group {timeline.daff_group}</Text>
+              <Text style={styles.infoValue}>Group {timeline.daff_group ?? "—"}</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoLabel}>Travel Date</Text>
@@ -212,20 +318,19 @@ export function TimelinePdf({ timeline }: Props) {
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoLabel}>Quarantine</Text>
-              <Text style={styles.infoValue}>{generated_steps.quarantineDays} days at Mickleham</Text>
+              <Text style={styles.infoValue}>{(generated_steps as { quarantineDays?: number }).quarantineDays ?? 0} days at Mickleham</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoLabel}>Estimated Cost</Text>
               <Text style={styles.infoValue}>
-                {new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", minimumFractionDigits: 0 })
-                  .format(generated_steps.totalEstimatedCostAUD)}
+                {AUD.format((generated_steps as { totalEstimatedCostAUD?: number }).totalEstimatedCostAUD ?? 0)}
               </Text>
             </View>
           </View>
 
-          {generated_steps.summary ? (
+          {(generated_steps as { summary?: string }).summary ? (
             <Text style={{ fontSize: 9, color: "#4b5563", lineHeight: 1.5 }}>
-              {generated_steps.summary}
+              {(generated_steps as { summary?: string }).summary}
             </Text>
           ) : null}
         </View>
@@ -247,8 +352,7 @@ export function TimelinePdf({ timeline }: Props) {
               <Text style={styles.stepDescription}>{step.description}</Text>
               {step.estimatedCost && (
                 <Text style={styles.stepCost}>
-                  Est. cost: {new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", minimumFractionDigits: 0 })
-                    .format(step.estimatedCost.amountAUD)} — {step.estimatedCost.description}
+                  Est. cost: {AUD.format(step.estimatedCost.amountAUD)} — {step.estimatedCost.description}
                 </Text>
               )}
             </View>

@@ -55,6 +55,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${plusJakarta.variable} ${geistMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-surface text-gray-900 antialiased overflow-x-hidden">

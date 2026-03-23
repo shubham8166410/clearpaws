@@ -1,14 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { PetPassportIllustration } from "./PetPassportIllustration";
 
 const LottieHero = dynamic(
   () => import("./LottieHero").then((m) => m.LottieHero),
   {
     ssr: false,
+    // Transparent placeholder — same dimensions as the Lottie so no layout shift
     loading: () => (
-      <PetPassportIllustration className="w-[200px] h-[200px] lg:w-[300px] lg:h-[300px]" />
+      <div className="w-[200px] h-[200px] lg:w-[300px] lg:h-[300px]" aria-hidden="true" />
     ),
   }
 );

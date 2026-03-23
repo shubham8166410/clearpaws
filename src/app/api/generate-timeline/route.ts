@@ -42,7 +42,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (ip === null) {
       return errorResponse("Unable to determine client identity", "NO_IP", 400);
     }
-    rateLimit = checkRateLimit(ip);
+    rateLimit = checkRateLimit(`ratelimit:timeline:${ip}`);
   }
 
   if (!rateLimit.allowed) {

@@ -6,9 +6,9 @@ import { HeroAnimation } from "@/components/icons/HeroAnimation";
 import { PawPrint } from "@/components/icons/PawPrint";
 
 export const metadata: Metadata = {
-  title: "PetBorder — Bring Your Pet to Australia. Know Exactly What to Do.",
+  title: "PetBorder — Pet Travel to & from Australia. Know Exactly What to Do.",
   description:
-    "Get a personalised DAFF compliance timeline in 60 seconds. Know every step, date, and cost for bringing your dog or cat to Australia.",
+    "Get a personalised DAFF compliance timeline in 60 seconds. Know every step, date, and cost for bringing your dog or cat to Australia — or taking them overseas.",
 };
 
 const FAQ_ITEMS = [
@@ -35,6 +35,10 @@ const FAQ_ITEMS = [
   {
     q: "Are Bengal cats allowed?",
     a: "No. Bengal cats are banned from import to Australia as of March 2026 under DAFF regulations.",
+  },
+  {
+    q: "Can I take my pet out of Australia?",
+    a: "Yes. You need to complete DAFF's export process — including a Notice of Intention (at least 10 business days before departure) and an export permit issued within 72 hours of your flight. Destination countries have their own import requirements. Use PetBorder's outbound planner for a full timeline.",
   },
 ];
 
@@ -77,29 +81,39 @@ export default function LandingPage() {
               <div className="flex flex-col gap-5 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 bg-accent-50 border border-accent-100 text-accent-600 text-xs font-semibold px-3 py-1.5 rounded-full self-center lg:self-start">
                   <PawPrint className="w-3.5 h-3.5" aria-hidden="true" />
-                  Free • Based on official DAFF rules
+                  Free • Built on verified DAFF requirements
                 </div>
 
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight tracking-tight">
-                  Bring Your Pet to Australia.{" "}
-                  <span className="text-brand-600">Know Exactly What to Do.</span>
+                  Moving your pet to Australia or overseas?{" "}
+                  <span className="text-brand-600">Know every step before you book.</span>
                 </h1>
 
                 <p className="text-base sm:text-lg text-gray-600 max-w-lg mx-auto lg:mx-0">
-                  Get a personalised DAFF compliance timeline in 60 seconds. Every step, every deadline, every cost — calculated for your specific pet and country.
+                  Answer 3 quick questions and get a personalised step-by-step plan — every deadline, cost, and requirement mapped out for your exact situation.
                 </p>
 
                 <div className="flex flex-col items-center lg:items-start gap-3">
-                  <Link
-                    href="/generate"
-                    className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-base font-semibold px-8 py-4 rounded-2xl transition-colors shadow-lg shadow-accent-500/20 min-h-[56px]"
-                  >
-                    Create My Pet's Timeline →
-                  </Link>
+                  <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                    <Link
+                      href="/generate"
+                      className="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-base font-semibold px-6 py-4 rounded-2xl transition-colors shadow-lg shadow-brand-600/20 min-h-[56px]"
+                    >
+                      <span aria-hidden="true">✈️🇦🇺</span>
+                      Bringing pet to Australia →
+                    </Link>
+                    <Link
+                      href="/outbound"
+                      className="inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-base font-semibold px-6 py-4 rounded-2xl transition-colors shadow-lg shadow-accent-500/20 min-h-[56px]"
+                    >
+                      <span aria-hidden="true">🇦🇺✈️</span>
+                      Taking pet overseas →
+                    </Link>
+                  </div>
                   <p className="text-xs text-gray-400 flex flex-wrap justify-center lg:justify-start gap-x-4 gap-y-1">
-                    <span>✓ No account required</span>
-                    <span>✓ Based on official DAFF rules</span>
-                    <span>✓ Free to generate</span>
+                    <span>✓ Free</span>
+                    <span>✓ No account needed</span>
+                    <span>✓ Official DAFF rules only</span>
                   </p>
                 </div>
               </div>
@@ -116,9 +130,9 @@ export default function LandingPage() {
         <section className="border-y border-card-border bg-white px-4 py-5" aria-label="Key features">
           <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm font-medium text-gray-600">
             {[
-              { icon: "🐾", text: "Based on official DAFF rules" },
-              { icon: "📋", text: "Covers all 3 country groups" },
-              { icon: "⏱️", text: "Ready in 60 seconds" },
+              { icon: "🐾", text: "Accuracy-checked DAFF requirements" },
+              { icon: "🔄", text: "Import & export pet journeys covered" },
+              { icon: "⏱️", text: "Your plan in under a minute" },
             ].map(({ icon, text }) => (
               <div key={text} className="flex items-center gap-2">
                 <span aria-hidden="true">{icon}</span>
@@ -128,12 +142,71 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── Direction picker ──────────────────────────────────────────────── */}
+        <section className="px-4 py-12 max-w-4xl mx-auto">
+          <div className="text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Bringing a pet in, or taking one out?</h2>
+            <p className="text-gray-500 mt-1.5 text-sm">Tell us your direction — we&apos;ll handle the rest.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Inbound */}
+            <div className="bg-white border-2 border-brand-100 rounded-2xl p-6 flex flex-col gap-3 hover:border-brand-300 transition-colors">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl" aria-hidden="true">✈️🇦🇺</span>
+                <div>
+                  <h3 className="font-bold text-gray-900">Moving to Australia with your pet</h3>
+                  <p className="text-xs text-gray-500">Coming from overseas</p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600">
+                DAFF compliance timeline — every import step, blood test deadline, quarantine booking, and cost.
+              </p>
+              <ul className="text-xs text-gray-500 flex flex-col gap-1">
+                <li>✓ All 3 DAFF country groups</li>
+                <li>✓ RNATT 180-day wait calculation</li>
+                <li>✓ Mickleham quarantine costs</li>
+              </ul>
+              <Link
+                href="/generate"
+                className="mt-auto inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors min-h-[44px]"
+              >
+                Get my arrival plan →
+              </Link>
+            </div>
+
+            {/* Outbound */}
+            <div className="bg-white border-2 border-accent-100 rounded-2xl p-6 flex flex-col gap-3 hover:border-accent-300 transition-colors">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl" aria-hidden="true">🇦🇺✈️</span>
+                <div>
+                  <h3 className="font-bold text-gray-900">Moving your pet out of Australia</h3>
+                  <p className="text-xs text-gray-500">Relocating or moving overseas</p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600">
+                DAFF export steps plus destination country entry requirements for the UK, USA, Japan, Singapore, and 80+ countries.
+              </p>
+              <ul className="text-xs text-gray-500 flex flex-col gap-1">
+                <li>✓ DAFF Notice of Intention + export permit</li>
+                <li>✓ Destination import rules (15 countries)</li>
+                <li>✓ 72-hour permit window warning</li>
+              </ul>
+              <Link
+                href="/outbound"
+                className="mt-auto inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors min-h-[44px]"
+              >
+                Get my departure plan →
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* ── How it works ──────────────────────────────────────────────────── */}
         <section id="how-it-works" className="px-4 py-16 max-w-4xl mx-auto scroll-mt-20">
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">How it works</h2>
             <p className="text-gray-500 mt-2 text-sm sm:text-base max-w-md mx-auto">
-              Three steps. Under a minute. A compliance timeline tailored to your situation.
+              Three questions. One minute. Every DAFF step laid out for you.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -141,20 +214,20 @@ export default function LandingPage() {
               {
                 Icon: PlaneIcon,
                 step: "01",
-                title: "Tell us your move",
-                desc: "Where you're moving from, when, and which pet. Takes 30 seconds.",
+                title: "Tell us about your pet & journey",
+                desc: "Direction, country, date, pet type. Four questions. Done in 30 seconds.",
               },
               {
                 Icon: DocumentIcon,
                 step: "02",
-                title: "Get your timeline",
-                desc: "Personalised DAFF compliance steps with exact dates and cost estimates.",
+                title: "Your personalised plan, instant",
+                desc: "Every compliance step, every due date, every cost — built for your exact situation.",
               },
               {
                 Icon: CheckIcon,
                 step: "03",
-                title: "Travel with confidence",
-                desc: "Know every deadline before it matters. Never miss a critical step.",
+                title: "Arrive prepared",
+                desc: "Every deadline clear. Every step accounted for. Travel knowing nothing's been missed.",
               },
             ].map(({ Icon, step, title, desc }) => (
               <div
@@ -178,8 +251,9 @@ export default function LandingPage() {
         <section className="bg-white border-y border-card-border px-4 py-16">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">DAFF country groups at a glance</h2>
-              <p className="text-gray-500 mt-2 text-sm">Your origin country determines everything.</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Bringing a pet to Australia</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Your origin country determines your whole timeline</h2>
+              <p className="text-gray-500 mt-2 text-sm">Australia groups countries by rabies risk — your group decides how long, how much, and which tests are needed.</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
@@ -277,21 +351,29 @@ export default function LandingPage() {
 
         {/* ── Final CTA ─────────────────────────────────────────────────────── */}
         <section className="bg-brand-600 px-4 py-14 text-center">
-          <div className="max-w-lg mx-auto flex flex-col items-center gap-4">
+          <div className="max-w-xl mx-auto flex flex-col items-center gap-4">
             <PawPrint className="w-10 h-10 text-accent-500" aria-hidden="true" />
             <h2 className="text-2xl sm:text-3xl font-bold text-white">
-              Ready to plan your pet's journey?
+              Let&apos;s get your pet&apos;s plan sorted.
             </h2>
             <p className="text-brand-100 text-sm">
-              Generate your free DAFF compliance timeline in under a minute.
+              Free. Accurate. Done in 60 seconds. For any direction.
             </p>
-            <Link
-              href="/generate"
-              className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-base font-semibold px-8 py-4 rounded-2xl transition-colors shadow-lg min-h-[56px] mt-2"
-            >
-              Create My Pet's Timeline →
-            </Link>
-            <p className="text-xs text-brand-200">Free to generate · No account required · Up to 5 timelines per day</p>
+            <div className="flex flex-col sm:flex-row gap-3 mt-2 w-full sm:w-auto">
+              <Link
+                href="/generate"
+                className="inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-base font-semibold px-7 py-4 rounded-2xl transition-colors shadow-lg min-h-[56px]"
+              >
+                Bringing pet to Australia →
+              </Link>
+              <Link
+                href="/outbound"
+                className="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 text-white text-base font-semibold px-7 py-4 rounded-2xl transition-colors border border-white/30 min-h-[56px]"
+              >
+                Taking pet overseas →
+              </Link>
+            </div>
+            <p className="text-xs text-brand-200">Free forever · No account needed · 5 plans per day</p>
           </div>
         </section>
       </main>

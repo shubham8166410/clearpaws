@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/Header";
 import { ProgressTracker } from "@/components/dashboard/ProgressTracker";
 import { PurchaseButton } from "@/components/dashboard/PurchaseButton";
+import { PaymentSuccessCelebration } from "@/components/dashboard/PaymentSuccessCelebration";
 
 export const dynamic = "force-dynamic";
 
@@ -37,15 +38,9 @@ export default async function TimelineDetailPage({ params, searchParams }: Props
       <main className="flex-1 px-4 py-8 sm:py-12">
         <div className="max-w-2xl mx-auto flex flex-col gap-6">
 
-          {/* Payment banner */}
+          {/* Payment celebration */}
           {payment === "success" && (
-            <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center gap-3">
-              <span className="text-xl" aria-hidden="true">🎉</span>
-              <div>
-                <p className="font-semibold text-green-900">Payment successful!</p>
-                <p className="text-sm text-green-700">Your document pack PDF is ready to download below.</p>
-              </div>
-            </div>
+            <PaymentSuccessCelebration timelineId={id} />
           )}
           {payment === "cancelled" && (
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">

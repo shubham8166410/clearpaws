@@ -14,12 +14,14 @@ export interface TimelineRow {
   id: string;
   user_id: string;
   pet_id: string | null;
-  origin_country: string;
+  direction: "inbound" | "outbound"; // Phase 5 — defaults to 'inbound' for existing rows
+  origin_country: string | null;     // null for outbound rows
+  destination_country: string | null; // null for inbound rows
   travel_date: string; // YYYY-MM-DD
   pet_type: PetType;
   pet_breed: string;
-  daff_group: DaffGroup;
-  generated_steps: SavedTimelineSteps;
+  daff_group: DaffGroup | null; // null for outbound rows
+  generated_steps: SavedTimelineSteps | SavedOutboundSteps;
   created_at: string;
 }
 
@@ -179,12 +181,14 @@ export interface ReferralClickRow {
 export interface TimelineInsert {
   user_id: string;
   pet_id?: string | null;
-  origin_country: string;
+  direction?: "inbound" | "outbound";
+  origin_country?: string | null;
+  destination_country?: string | null;
   travel_date: string;
   pet_type: PetType;
   pet_breed: string;
-  daff_group: DaffGroup;
-  generated_steps: SavedTimelineSteps;
+  daff_group?: DaffGroup | null;
+  generated_steps: SavedTimelineSteps | SavedOutboundSteps;
 }
 
 export interface TimelineProgressInsert {
@@ -303,7 +307,7 @@ export interface ReferralClickInsert {
 
 // ── Composite / denormalised types used in UI ─────────────────────────────────
 
-/** The full timeline output shape stored in generated_steps jsonb column */
+/** The full timeline output shape stored in generated_steps jsonb column (inbound) */
 export interface SavedTimelineSteps {
   steps: TimelineStep[];
   warnings: TimelineWarning[];
@@ -311,6 +315,28 @@ export interface SavedTimelineSteps {
   quarantineDays: number;
   earliestTravelDate: string;
   summary: string;
+}
+
+/** Outbound timeline data stored in generated_steps for outbound rows (Phase 5) */
+export interface SavedOutboundSteps {
+  direction: "outbound";
+  destinationCode: string;
+  destinationName: string;
+  tier: 1 | 2 | 3;
+  hasLongLeadTimeWarning: boolean;
+  steps: Array<{
+    id: string;
+    section: "au-export" | "destination";
+    title: string;
+    description: string;
+    calculatedDate: string; // YYYY-MM-DD
+    sourceUrl: string;
+    isVerified: boolean;
+    estimatedCostAUD: number | null;
+    alreadyComplete: boolean;
+  }>;
+  lastVerified: string;
+  disclaimer: string;
 }
 
 /** Timeline row joined with progress for dashboard display */

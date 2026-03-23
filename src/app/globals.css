@@ -42,9 +42,7 @@ body {
   overflow-x: hidden;
 }
 
-main {
-  animation: fade-up 0.3s ease-out both;
-}
+/* Page-enter animation handled by PageTransition (framer-motion) */
 
 /* ── Paw-print SVG background (used in hero) ───────────────────────────── */
 .bg-paw-pattern {
@@ -73,3 +71,18 @@ main {
 .animate-paw-bounce   { animation: paw-bounce 1.4s ease-in-out infinite; }
 .animate-paw-message  { animation: paw-fade-in-out 2.8s ease-in-out; }
 .animate-fade-up      { animation: fade-up 0.35s ease-out forwards; }
+.animate-shimmer      { animation: shimmer 1.6s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-paw-bounce,
+  .animate-paw-message,
+  .animate-shimmer {
+    animation: none;
+  }
+}

@@ -13,12 +13,17 @@ export interface MonitorResult {
   errors: string[];
 }
 
-/** The 4 DAFF pages to monitor for rule changes. */
+/** All DAFF pages monitored for rule changes — inbound and outbound. */
 export const DAFF_MONITORED_PAGES = [
+  // ── Inbound (importing pets to Australia) ──────────────────────────────────
   'https://www.agriculture.gov.au/biosecurity-trade/cats-dogs',
   'https://www.agriculture.gov.au/biosecurity-trade/cats-dogs/how-to-import',
   'https://www.agriculture.gov.au/biosecurity-trade/cats-dogs/how-to-import/permit',
   'https://www.agriculture.gov.au/biosecurity-trade/cats-dogs/post-entry-quarantine',
+  // ── Outbound (exporting pets from Australia) ───────────────────────────────
+  'https://www.agriculture.gov.au/biosecurity-trade/export/controlled-goods/live-animals/companion-and-other-live-animals',
+  'https://www.agriculture.gov.au/biosecurity-trade/export/controlled-goods/live-animals/companion-and-other-live-animals/lodging-notice-of-intention',
+  'https://www.agriculture.gov.au/biosecurity-trade/export/controlled-goods/live-animals/companion-and-other-live-animals/export-permit',
 ] as const;
 
 /**

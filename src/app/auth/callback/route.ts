@@ -9,17 +9,27 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
 
-  // Validate redirectTo — only allow relative paths to prevent open-redirect attacks
+  // Validate redirectTo: must be a relative path.
+  // Reject protocol-relative URLs (//evil.com) — browsers treat them as absolute.
   const rawRedirect = searchParams.get("redirectTo") ?? "/dashboard";
-  const redirectTo = rawRedirect.startsWith("/") ? rawRedirect : "/dashboard";
+  const redirectTo =
+    rawRedirect.startsWith("/") && !rawRedirect.startsWith("//")
+      ? rawRedirect
+      : "/dashboard";
 
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // Detect new users: created_at and last_sign_in_at are equal (within 5s) on first sign-in
       const { data: { user } } = await supabase.auth.getUser();
+
+      // Session exchange succeeded but user is null — treat as failure
+      if (!user) {
+        return NextResponse.redirect(`${origin}/login?error=oauth_failed`);
+      }
+
+      // Detect new users: created_at and last_sign_in_at are equal (within 5s) on first sign-in
       const isNewUser =
         user !== null &&
         user.created_at !== undefined &&

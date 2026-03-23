@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { TimelineForm } from "@/components/timeline/TimelineForm";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PawPrint } from "@/components/icons/PawPrint";
+import { OutboundForm } from "@/components/outbound/OutboundForm";
 
 export const metadata: Metadata = {
-  title: "Generate Your Pet Travel Timeline",
+  title: "Taking Your Pet Out of Australia — PetBorder",
   description:
-    "Enter your pet's details and travel plans to get a personalised DAFF compliance timeline for bringing your pet to Australia.",
+    "Get a personalised outbound travel timeline for taking your dog or cat from Australia to the UK, USA, Japan, Singapore, and 80+ countries.",
 };
 
-export default function GeneratePage() {
+export default function OutboundPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -20,24 +20,30 @@ export default function GeneratePage() {
         <div className="max-w-2xl mx-auto">
           {/* Page intro */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-50 mb-4">
-              <PawPrint className="w-7 h-7 text-brand-600" aria-hidden="true" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-accent-50 mb-4">
+              <PawPrint className="w-7 h-7 text-accent-600" aria-hidden="true" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Plan your pet&apos;s Australian arrival
+              Taking your pet out of Australia
             </h1>
             <p className="text-sm text-gray-500 mt-1.5 max-w-sm mx-auto">
-              Answer 3 quick questions — we&apos;ll map every DAFF step, deadline, and cost for your exact situation.
+              Tell us your destination and departure date — we'll calculate every DAFF export step and destination entry requirement.
             </p>
           </div>
 
           {/* Form card */}
           <div className="bg-white border border-card-border rounded-2xl p-6 sm:p-8 shadow-sm">
-            <TimelineForm />
+            <OutboundForm />
           </div>
 
-          {/* Back link */}
-          <div className="mt-6 text-center">
+          {/* Links */}
+          <div className="mt-6 text-center flex flex-col gap-2">
+            <p className="text-xs text-gray-400">
+              Bringing a pet <em>to</em> Australia instead?{" "}
+              <Link href="/generate" className="underline hover:text-gray-600">
+                Use the inbound planner →
+              </Link>
+            </p>
             <Link
               href="/"
               className="text-sm text-gray-400 hover:text-gray-600 transition-colors"

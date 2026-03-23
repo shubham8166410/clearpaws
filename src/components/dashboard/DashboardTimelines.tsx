@@ -1,8 +1,22 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
-import type { TimelineRow } from "@/types/database";
+import Lottie from "lottie-react";
+import catAnimation from "@/assets/animations/cat-love.json";
+import type { TimelineRow, SavedOutboundSteps } from "@/types/database";
+
+function isOutbound(timeline: TimelineRow): boolean {
+  return timeline.direction === "outbound";
+}
+
+function getOutboundSteps(timeline: TimelineRow): SavedOutboundSteps | null {
+  const steps = timeline.generated_steps;
+  if ("direction" in steps && steps.direction === "outbound") {
+    return steps as SavedOutboundSteps;
+  }
+  return null;
+}
 
 // ── Icons ──────────────────────────────────────────────────────────────────
 
@@ -115,7 +129,12 @@ function TimelineCard({ timeline, onDeleteRequest, confirmingId, onConfirm, onCa
     2: "bg-amber-100 text-amber-800",
     3: "bg-red-100 text-red-800",
   };
-  const steps = timeline.generated_steps.steps ?? [];
+
+  const outbound = isOutbound(timeline);
+  const outboundSteps = outbound ? getOutboundSteps(timeline) : null;
+  const stepCount = outbound
+    ? (outboundSteps?.steps.length ?? 0)
+    : ((timeline.generated_steps as { steps?: unknown[] }).steps?.length ?? 0);
   const isConfirming = confirmingId === timeline.id;
 
   return (
@@ -137,18 +156,33 @@ function TimelineCard({ timeline, onDeleteRequest, confirmingId, onConfirm, onCa
                 <span className="font-semibold text-gray-900 capitalize">
                   {timeline.pet_type} — {timeline.pet_breed}
                 </span>
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${groupColors[timeline.daff_group]}`}>
-                  Group {timeline.daff_group}
-                </span>
+                {outbound ? (
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 bg-accent-100 text-accent-800">
+                    Outbound
+                  </span>
+                ) : timeline.daff_group ? (
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${groupColors[timeline.daff_group]}`}>
+                    Group {timeline.daff_group}
+                  </span>
+                ) : null}
               </div>
-              <p className="text-sm text-gray-500">
-                From <strong>{timeline.origin_country}</strong> · Travel{" "}
-                {new Date(timeline.travel_date + "T00:00:00").toLocaleDateString("en-AU", {
-                  month: "long", year: "numeric",
-                })}
-              </p>
+              {outbound ? (
+                <p className="text-sm text-gray-500">
+                  To <strong>{outboundSteps?.destinationName ?? timeline.destination_country}</strong> · Depart{" "}
+                  {new Date(timeline.travel_date + "T00:00:00").toLocaleDateString("en-AU", {
+                    month: "long", year: "numeric",
+                  })}
+                </p>
+              ) : (
+                <p className="text-sm text-gray-500">
+                  From <strong>{timeline.origin_country}</strong> · Travel{" "}
+                  {new Date(timeline.travel_date + "T00:00:00").toLocaleDateString("en-AU", {
+                    month: "long", year: "numeric",
+                  })}
+                </p>
+              )}
               <p className="text-xs text-gray-400 mt-1">
-                {steps.length} compliance steps · Saved{" "}
+                {stepCount} steps · Saved{" "}
                 {new Date(timeline.created_at).toLocaleDateString("en-AU")}
               </p>
             </div>
@@ -178,16 +212,33 @@ function TimelineCard({ timeline, onDeleteRequest, confirmingId, onConfirm, onCa
 // ── Empty state ────────────────────────────────────────────────────────────
 
 function EmptyState() {
+  const [autoplay, setAutoplay] = useState(true);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setAutoplay(false);
+    }
+  }, []);
+
   return (
-    <div className="text-center py-20 border border-dashed border-card-border rounded-2xl">
-      <p className="text-4xl mb-4" aria-hidden="true">🐾</p>
-      <h2 className="font-semibold text-gray-900 mb-1">No timelines saved yet</h2>
-      <p className="text-sm text-gray-500 mb-6">Generate a compliance timeline for your pet and it will appear here automatically.</p>
+    <div className="text-center py-16 border border-dashed border-card-border rounded-2xl flex flex-col items-center">
+      <div aria-hidden="true">
+        <Lottie
+          animationData={catAnimation}
+          loop={true}
+          autoplay={autoplay}
+          style={{ width: 160, height: 160 }}
+        />
+      </div>
+      <h2 className="font-semibold text-gray-900 mb-1">Nothing here yet — let&apos;s change that</h2>
+      <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto">
+        Create your first compliance plan in 60 seconds — just 3 questions.
+      </p>
       <Link
         href="/generate"
-        className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
+        className="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors"
       >
-        Create my pet&apos;s timeline →
+        Build my first plan →
       </Link>
     </div>
   );

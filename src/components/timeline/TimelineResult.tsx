@@ -92,8 +92,7 @@ function AgencyReferralSection() {
             <button
               type="button"
               onClick={() => handleAgencyQuoteClick(agency)}
-              className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-white px-3 py-1.5 rounded-lg transition-colors min-h-[36px]"
-              style={{ backgroundColor: "#E67E22" }}
+              className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-accent-500 hover:bg-accent-600 active:bg-accent-600 px-3 py-1.5 rounded-lg transition-colors min-h-[36px] cursor-pointer"
               aria-label={`Get a free quote from ${agency.name}`}
             >
               Get Quote
