@@ -40,7 +40,7 @@ export function AgencySidebarNav({ slug }: AgencySidebarNavProps) {
         );
       })}
       <a
-        href={`https://${slug}.clearpaws.com.au`}
+        href={`https://${slug}.petborder.com`}
         target="_blank"
         rel="noopener noreferrer"
         className="px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors mt-2 border-t border-gray-100 pt-4"

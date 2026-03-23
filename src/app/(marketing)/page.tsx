@@ -6,7 +6,7 @@ import { HeroAnimation } from "@/components/icons/HeroAnimation";
 import { PawPrint } from "@/components/icons/PawPrint";
 
 export const metadata: Metadata = {
-  title: "ClearPaws — Bring Your Pet to Australia. Know Exactly What to Do.",
+  title: "PetBorder — Bring Your Pet to Australia. Know Exactly What to Do.",
   description:
     "Get a personalised DAFF compliance timeline in 60 seconds. Know every step, date, and cost for bringing your dog or cat to Australia.",
 };

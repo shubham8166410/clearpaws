@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- ClearPaws Phase 2 — Initial schema
+-- PetBorder Phase 2 — Initial schema
 -- Run this in Supabase SQL editor or via supabase db push
 -- ─────────────────────────────────────────────────────────────────────────────
 

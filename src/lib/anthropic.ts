@@ -79,7 +79,7 @@ const enhancedTimelineOutputSchema = z.object({
 function buildSystemPrompt(): string {
   const rulesContext = getRulesAsContext();
 
-  return `You are a DAFF compliance assistant for ClearPaws.
+  return `You are a DAFF compliance assistant for PetBorder.
 Generate timelines using ONLY the rules provided below.
 Do NOT use any DAFF knowledge from your training data.
 If a rule is not listed below, do not include it.
@@ -140,7 +140,7 @@ Return ONLY valid JSON matching this TypeScript type (no markdown, no explanatio
     "currency": "AUD",
     "disclaimer": "string"
   },
-  "disclaimer": "This timeline is based on DAFF rules last verified ${DAFF_RULES.lastVerified}. Requirements can change. Always confirm with DAFF at agriculture.gov.au before booking travel for your pet. ClearPaws is a planning tool, not legal or veterinary advice.",
+  "disclaimer": "This timeline is based on DAFF rules last verified ${DAFF_RULES.lastVerified}. Requirements can change. Always confirm with DAFF at agriculture.gov.au before booking travel for your pet. PetBorder is a planning tool, not legal or veterinary advice.",
   "dataLastVerified": "${DAFF_RULES.lastVerified}",
   "verifyAtUrl": "${DAFF_RULES.sourceUrl}"
 }

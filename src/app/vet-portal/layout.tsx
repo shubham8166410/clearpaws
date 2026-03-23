@@ -36,7 +36,7 @@ export default async function VetPortalLayout({ children }: Props) {
       <div className="min-h-screen bg-[#FAFAF8]">
         <header className="border-b border-[#E5E3DF] bg-white px-6 py-4">
           <div className="mx-auto flex max-w-6xl items-center justify-between">
-            <span className="text-lg font-bold text-[#1B4F72]">ClearPaws Vet Portal</span>
+            <span className="text-lg font-bold text-[#1B4F72]">PetBorder Vet Portal</span>
           </div>
         </header>
         <main className="mx-auto max-w-lg px-6 py-16 text-center">
@@ -64,7 +64,7 @@ export default async function VetPortalLayout({ children }: Props) {
       <div className="min-h-screen bg-[#FAFAF8]">
         <header className="border-b border-[#E5E3DF] bg-white px-6 py-4">
           <div className="mx-auto flex max-w-6xl items-center justify-between">
-            <span className="text-lg font-bold text-[#1B4F72]">ClearPaws Vet Portal</span>
+            <span className="text-lg font-bold text-[#1B4F72]">PetBorder Vet Portal</span>
           </div>
         </header>
         <main className="mx-auto max-w-lg px-6 py-16 text-center">
@@ -77,7 +77,7 @@ export default async function VetPortalLayout({ children }: Props) {
             <p className="text-sm text-amber-600">
               Questions?{" "}
               <a
-                href={`mailto:${process.env.ADMIN_EMAIL ?? "support@clearpaws.com.au"}`}
+                href={`mailto:${process.env.ADMIN_EMAIL ?? "support@petborder.com"}`}
                 className="font-semibold underline underline-offset-2"
               >
                 Contact support
@@ -94,7 +94,7 @@ export default async function VetPortalLayout({ children }: Props) {
     <div className="min-h-screen bg-[#FAFAF8]">
       <header className="border-b border-[#E5E3DF] bg-white px-6 py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <span className="text-lg font-bold text-[#1B4F72]">ClearPaws Vet Portal</span>
+          <span className="text-lg font-bold text-[#1B4F72]">PetBorder Vet Portal</span>
           <span className="rounded-full bg-teal-100 px-3 py-1 text-xs font-semibold text-teal-800">
             Verified Vet
           </span>

@@ -8,7 +8,7 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(request: NextRequest) {
   // ── Subdomain routing ────────────────────────────────────────────────────
   const hostname = request.headers.get("host") ?? "";
-  const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN ?? "clearpaws.com.au";
+  const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN ?? "petborder.com";
 
   const isLocalOrPreview =
     hostname.includes("localhost") ||

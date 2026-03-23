@@ -22,7 +22,7 @@ import { checkApiKeyRateLimit } from "@/lib/api-rate-limit";
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function makeRequest(authHeader?: string): NextRequest {
-  return new NextRequest("https://api.clearpaws.com.au/api/v1/timeline", {
+  return new NextRequest("https://api.petborder.com/api/v1/timeline", {
     headers: authHeader ? { Authorization: authHeader } : {},
   });
 }

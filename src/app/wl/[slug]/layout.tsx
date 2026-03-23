@@ -85,12 +85,12 @@ export default async function WlLayout({ children, params }: WlLayoutProps) {
       <footer className="border-t border-card-border px-4 py-4 text-center text-xs text-gray-400">
         Powered by{" "}
         <Link
-          href="https://clearpaws.com.au"
+          href="https://petborder.com"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-gray-600 underline transition-colors"
         >
-          ClearPaws
+          PetBorder
         </Link>
         {" "}— Always verify requirements with{" "}
         <a

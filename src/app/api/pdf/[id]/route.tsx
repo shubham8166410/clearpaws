@@ -41,7 +41,7 @@ export async function GET(
 
   try {
     const buffer = await renderToBuffer(<TimelinePdf timeline={timeline} />);
-    const filename = `clearpaws-timeline-${timeline.pet_breed.replace(/\s+/g, "-").toLowerCase()}.pdf`;
+    const filename = `petborder-timeline-${timeline.pet_breed.replace(/\s+/g, "-").toLowerCase()}.pdf`;
 
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,

@@ -41,7 +41,7 @@ export default async function AdminLayout({
       <header className="border-b border-[#E5E3DF] bg-white px-6 py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <span className="text-lg font-bold text-[#1B4F72]">
-            ClearPaws Admin
+            PetBorder Admin
           </span>
           <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
             Admin

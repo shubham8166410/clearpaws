@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { PawPrint } from "@/components/icons/PawPrint";
 
 export const metadata: Metadata = {
-  title: "Create your ClearPaws account",
+  title: "Create your PetBorder account",
 };
 
 export default function SignupPage() {

@@ -9,8 +9,8 @@ const bodySchema = z.object({
 });
 
 const ALLOWED_ORIGINS = new Set([
-  "https://clearpaws.com.au",
-  "https://www.clearpaws.com.au",
+  "https://petborder.com",
+  "https://www.petborder.com",
   ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
 ]);
 
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   // Validate origin against allowlist to prevent open-redirect via crafted headers
   const rawOrigin = req.headers.get("origin") ?? "";
-  const origin = ALLOWED_ORIGINS.has(rawOrigin) ? rawOrigin : "https://clearpaws.com.au";
+  const origin = ALLOWED_ORIGINS.has(rawOrigin) ? rawOrigin : "https://petborder.com";
 
   const serviceClient = createServiceClient();
 

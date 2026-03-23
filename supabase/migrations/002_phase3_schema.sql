@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- ClearPaws Phase 3 — Schema extensions
+-- PetBorder Phase 3 — Schema extensions
 -- Run once in Supabase SQL editor: supabase.com → SQL Editor → paste → Run
 -- Safe to run on top of 001_phase2_schema.sql
 -- ─────────────────────────────────────────────────────────────────────────────

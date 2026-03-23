@@ -124,10 +124,10 @@ export async function PATCH(
     const resend = new Resend(process.env.RESEND_API_KEY);
     resend.emails
       .send({
-        from: "ClearPaws <no-reply@clearpaws.com.au>",
+        from: "PetBorder <no-reply@petborder.com>",
         to: vetEmail,
-        subject: "Your ClearPaws vet portal access has been approved",
-        html: `<p>Your ClearPaws vet portal access has been approved. You can now <a href="https://clearpaws.com.au/vet-portal">access the vet portal</a>.</p>`,
+        subject: "Your PetBorder vet portal access has been approved",
+        html: `<p>Your PetBorder vet portal access has been approved. You can now <a href="https://petborder.com/vet-portal">access the vet portal</a>.</p>`,
       })
       .catch(() => {
         // Intentionally ignore — email failure must not block the response

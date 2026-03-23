@@ -95,7 +95,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const displayName = pet_owner_name ?? "Someone";
       void resend.emails
         .send({
-          from: "ClearPaws <noreply@clearpaws.com.au>",
+          from: "PetBorder <noreply@petborder.com>",
           to: agency.contact_email,
           subject: `New lead from ${displayName}`,
           text: [

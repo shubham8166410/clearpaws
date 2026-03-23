@@ -155,7 +155,7 @@ export default function AgencySettingsPage() {
           </label>
           <input
             type="text"
-            value={`https://${agency.slug}.clearpaws.com.au`}
+            value={`https://${agency.slug}.petborder.com`}
             readOnly
             className="w-full border border-gray-100 rounded-lg px-3 py-2 text-sm text-gray-500 bg-gray-50 cursor-not-allowed font-mono"
           />

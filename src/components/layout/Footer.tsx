@@ -13,7 +13,7 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <PawPrint className="w-6 h-6 text-accent-500" aria-hidden="true" />
-              <span className="font-extrabold text-lg tracking-tight">ClearPaws</span>
+              <span className="font-extrabold text-lg tracking-tight">PetBorder</span>
             </div>
             <p className="text-sm text-white/60 leading-relaxed max-w-xs">
               Australia's pet import compliance planner. Built for pet owners navigating DAFF regulations.
@@ -56,9 +56,9 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-6 flex flex-col sm:flex-row justify-between gap-3 text-xs text-white/40">
-          <p>© {year} ClearPaws. Built for Australian pet owners.</p>
+          <p>© {year} PetBorder. Built for Australian pet owners.</p>
           <p className="sm:max-w-sm sm:text-right leading-relaxed">
-            ClearPaws provides general guidance only. Always verify requirements with DAFF before travel.
+            PetBorder provides general guidance only. Always verify requirements with DAFF before travel.
           </p>
         </div>
       </div>

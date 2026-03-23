@@ -1,7 +1,7 @@
-# ClearPaws — Claude Code Project Config
+# PetBorder — Claude Code Project Config
 
 ## What this product is
-ClearPaws (clearpaws.com.au) is an AI-powered pet travel compliance 
+PetBorder (petborder.com) is an AI-powered pet travel compliance 
 planner for Australia. Pet owners enter 3 things — where they're 
 moving from, when they want to travel, and what pet they have — and 
 get a personalised step-by-step DAFF compliance timeline with exact 
@@ -189,15 +189,15 @@ Phases 1, 2 and 3 are complete and working.
 
 ### White-label agency portal
 - Agencies (Petraveller, Dogtainers, Jetpets) get their own
-  subdomain: petraveller.clearpaws.com.au
-- ClearPaws timeline tool renders under agency branding
+  subdomain: petraveller.petborder.com
+- PetBorder timeline tool renders under agency branding
   (logo, colours, contact details all customisable)
 - All leads generated through white-label are tagged to that agency
 - Agency sees their leads in real-time dashboard
 - Setup fee: $299 one-time + $299/month (B2B pricing)
 
 ### Agency lead dashboard
-- Each agency gets a login to agency.clearpaws.com.au
+- Each agency gets a login to agency.petborder.com
 - Dashboard shows: all referral leads, pet details,
   origin country, travel date, contact info, status
 - Lead status: new / contacted / converted / lost
@@ -205,11 +205,11 @@ Phases 1, 2 and 3 are complete and working.
 - Email notification when new lead arrives
 
 ### Vet portal
-- DAFF-approved vets register at vet.clearpaws.com.au
+- DAFF-approved vets register at vet.petborder.com
 - Dashboard shows their export clients and timelines
 - Vets can see what documents each client needs
 - Vets can mark steps as completed on behalf of client
-- Vet profile shows on ClearPaws vet finder map
+- Vet profile shows on PetBorder vet finder map
 
 ### Public API
 - REST API for agencies to integrate timeline engine
@@ -252,11 +252,11 @@ Phases 1, 2 and 3 are complete and working.
 - OpenAPI docs show no secret implementation details
 
 ## Phase 4 new env vars
-NEXT_PUBLIC_BASE_DOMAIN=clearpaws.com.au
+NEXT_PUBLIC_BASE_DOMAIN=petborder.com
 B2B_STRIPE_PRICE_ID=price_...  ← $299/mo agency subscription
 
 ## Accuracy system
-ClearPaws must achieve 99%+ accuracy on DAFF compliance
+PetBorder must achieve 99%+ accuracy on DAFF compliance
 information. This is a three-layer system:
 
 Layer 1 — Hardcoded knowledge base
@@ -303,4 +303,4 @@ Disclaimer shown on every timeline:
 "This timeline is based on DAFF rules last verified [date].
 Requirements can change. Always confirm with DAFF at
 agriculture.gov.au before booking travel for your pet.
-ClearPaws is a planning tool, not legal or veterinary advice."
+PetBorder is a planning tool, not legal or veterinary advice."

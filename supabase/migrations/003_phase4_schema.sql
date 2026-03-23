@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- ClearPaws Phase 4 — Schema extensions
+-- PetBorder Phase 4 — Schema extensions
 -- Run once in Supabase SQL editor: supabase.com → SQL Editor → paste → Run
 -- Safe to run on top of 002_phase3_schema.sql
 -- ─────────────────────────────────────────────────────────────────────────────
@@ -321,7 +321,7 @@ GRANT  EXECUTE ON FUNCTION public.is_verified_vet() TO authenticated;
 -- ─────────────────────────────────────────────────────────────────────────────
 -- END OF MIGRATION
 -- New env vars needed before deploying Phase 4:
---   NEXT_PUBLIC_BASE_DOMAIN=clearpaws.com.au
+--   NEXT_PUBLIC_BASE_DOMAIN=petborder.com
 --   B2B_STRIPE_PRICE_ID=price_...
--- Vercel: add *.clearpaws.com.au as a wildcard domain alias
+-- Vercel: add *.petborder.com as a wildcard domain alias
 -- ─────────────────────────────────────────────────────────────────────────────

@@ -1,8 +1,8 @@
-# ClearPaws
+# PetBorder
 
-ClearPaws is an AI-powered pet travel compliance planner for Australia. Pet owners enter three things — where they are moving from, when they want to travel, and what pet they have — and receive a personalised step-by-step DAFF compliance timeline with exact dates, real cost estimates, and every requirement written in plain English. The product runs across four phases: a free timeline generator, paid accounts and document packs, a subscription tier with premium features, and a B2B white-label platform for pet transport agencies.
+PetBorder is an AI-powered pet travel compliance planner for Australia. Pet owners enter three things — where they are moving from, when they want to travel, and what pet they have — and receive a personalised step-by-step DAFF compliance timeline with exact dates, real cost estimates, and every requirement written in plain English. The product runs across four phases: a free timeline generator, paid accounts and document packs, a subscription tier with premium features, and a B2B white-label platform for pet transport agencies.
 
-**Live site:** [clearpaws.com.au](https://clearpaws.com.au)
+**Live site:** [petborder.com](https://petborder.com)
 **Vercel dashboard:** [vercel.com/dashboard](https://vercel.com/dashboard)
 **Supabase dashboard:** [supabase.com/dashboard](https://supabase.com/dashboard)
 
@@ -41,8 +41,8 @@ ClearPaws is an AI-powered pet travel compliance planner for Australia. Pet owne
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/your-org/clearpaws.git
-cd clearpaws
+git clone https://github.com/your-org/petborder.git
+cd petborder
 npm install
 ```
 
@@ -107,7 +107,7 @@ All variables are required in production. Copy `.env.production.example` to `.en
 | `STRIPE_SUBSCRIPTION_PRICE_ID` | Price ID for the $9.90 AUD/month subscription |
 | `B2B_STRIPE_PRICE_ID` | Price ID for the $299 AUD/month agency portal |
 | `RESEND_API_KEY` | Transactional email — deadline reminders and DAFF alerts |
-| `NEXT_PUBLIC_BASE_DOMAIN` | Production domain, e.g. `clearpaws.com.au` |
+| `NEXT_PUBLIC_BASE_DOMAIN` | Production domain, e.g. `petborder.com` |
 | `ADMIN_EMAIL` | Receives DAFF rule-change alerts and vet registration notifications |
 | `CRON_SECRET` | Secures cron endpoints — generate with `openssl rand -hex 32` |
 
@@ -140,7 +140,7 @@ Tests live in `__tests__/` and are organised to mirror the source structure. Cov
 
 1. Push to the `main` branch — Vercel deploys automatically.
 2. Add all environment variables in Vercel → Project → Settings → Environment Variables.
-3. Set Stripe webhook endpoint to `https://clearpaws.com.au/api/webhook/stripe` — copy the signing secret to `STRIPE_WEBHOOK_SECRET`.
+3. Set Stripe webhook endpoint to `https://petborder.com/api/webhook/stripe` — copy the signing secret to `STRIPE_WEBHOOK_SECRET`.
 4. Vercel activates the cron jobs in `vercel.json` automatically in production.
 
 ### Manual production build
@@ -164,7 +164,7 @@ Configured in `vercel.json` and secured by `CRON_SECRET`:
 ## Project structure
 
 ```
-clearpaws/
+petborder/
 ├── src/
 │   ├── app/
 │   │   ├── (marketing)/          # Landing page (unauthenticated)
@@ -245,13 +245,13 @@ Supabase Auth with email/password and Google OAuth. Users can save generated tim
 $9.90 AUD/month Stripe subscription gives users a progress tracker to tick off completed steps, multi-pet profile management, a map of DAFF-approved export vets filtered by state, a directory of RNATT-approved laboratories by country, and a comparison table of Petraveller, Dogtainers, and Jetpets with pricing and direct referral links.
 
 ### Phase 4 — B2B white-label platform
-Pet transport agencies pay $299 AUD/month for a white-label portal (`[slug].clearpaws.com.au`) where their customers use the timeline tool under the agency's branding. Agencies log in to `agency.clearpaws.com.au` to view leads, update statuses, export CSV, and manage API keys. A public REST API (`/api/v1`) allows agencies to integrate the timeline engine programmatically. Vets can register at `vet.clearpaws.com.au` and manage export clients. An admin dashboard tracks MRR, user growth, referral clicks, and API usage.
+Pet transport agencies pay $299 AUD/month for a white-label portal (`[slug].petborder.com`) where their customers use the timeline tool under the agency's branding. Agencies log in to `agency.petborder.com` to view leads, update statuses, export CSV, and manage API keys. A public REST API (`/api/v1`) allows agencies to integrate the timeline engine programmatically. Vets can register at `vet.petborder.com` and manage export clients. An admin dashboard tracks MRR, user growth, referral clicks, and API usage.
 
 ---
 
 ## Accuracy system
 
-DAFF compliance information must be correct. ClearPaws uses three layers:
+DAFF compliance information must be correct. PetBorder uses three layers:
 
 **Layer 1 — Hardcoded knowledge base**
 All stable DAFF rules are stored in `src/lib/daff-rules.ts` with source URLs and verified dates. The Claude API is never asked to recall rules from training data. Every call to the AI includes the full rule set explicitly: *"Here are the current DAFF rules. Use only these rules. Do not add rules not listed here."*

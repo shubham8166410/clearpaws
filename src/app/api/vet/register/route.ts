@@ -88,7 +88,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const resend = new Resend(process.env.RESEND_API_KEY);
     resend.emails
       .send({
-        from: "ClearPaws <no-reply@clearpaws.com.au>",
+        from: "PetBorder <no-reply@petborder.com>",
         to: adminEmail,
         subject: "New vet registration pending review",
         html: `<p>New vet registration pending: <strong>${ahpra_number}</strong>, clinic_id: ${clinic_id}, user_id: ${user.id}</p>`,

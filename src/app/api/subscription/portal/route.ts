@@ -4,8 +4,8 @@ import { stripe } from "@/lib/stripe";
 import type { ApiErrorResponse } from "@/types/timeline";
 
 const ALLOWED_ORIGINS = new Set([
-  "https://clearpaws.com.au",
-  "https://www.clearpaws.com.au",
+  "https://petborder.com",
+  "https://www.petborder.com",
   ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
 ]);
 
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const rawOrigin = req.headers.get("origin") ?? "";
-  const origin = ALLOWED_ORIGINS.has(rawOrigin) ? rawOrigin : "https://clearpaws.com.au";
+  const origin = ALLOWED_ORIGINS.has(rawOrigin) ? rawOrigin : "https://petborder.com";
 
   const session = await stripe.billingPortal.sessions.create({
     customer: sub.stripe_customer_id,

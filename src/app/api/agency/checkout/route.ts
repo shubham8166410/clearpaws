@@ -3,7 +3,7 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { stripe, B2B_PRICE_ID } from "@/lib/stripe";
 import type { ApiErrorResponse } from "@/types/api";
 
-const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN ?? "clearpaws.com.au";
+const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN ?? "petborder.com";
 
 function errorResponse(message: string, status: number): NextResponse<ApiErrorResponse> {
   const body: ApiErrorResponse = { success: false, error: message, status };

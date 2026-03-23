@@ -59,7 +59,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return errorResponse("Already purchased", "ALREADY_PURCHASED", 409);
   }
 
-  const origin = req.headers.get("origin") ?? "https://clearpaws.com.au";
+  const origin = req.headers.get("origin") ?? "https://petborder.com";
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",

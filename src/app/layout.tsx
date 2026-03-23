@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ClearPaws — Pet Travel Compliance Planner for Australia",
-    template: "%s | ClearPaws",
+    default: "PetBorder — Pet Travel Compliance Planner for Australia",
+    template: "%s | PetBorder",
   },
   description:
     "Get a personalised DAFF compliance timeline for bringing your dog or cat to Australia. Exact dates, cost estimates, and step-by-step guidance.",
@@ -36,14 +36,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_AU",
-    siteName: "ClearPaws",
-    title: "ClearPaws — Pet Travel Compliance Planner for Australia",
+    siteName: "PetBorder",
+    title: "PetBorder — Pet Travel Compliance Planner for Australia",
     description:
       "Personalised DAFF compliance timelines for bringing your pet to Australia. Know exactly what to do and when.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ClearPaws — Pet Travel Compliance Planner",
+    title: "PetBorder — Pet Travel Compliance Planner",
     description: "Personalised DAFF compliance timelines for Australia pet import.",
   },
   robots: { index: true, follow: true },

@@ -2,8 +2,8 @@ import { openApiSpec } from "@/lib/openapi-spec";
 import { SwaggerUIComponent } from "./SwaggerUIComponent";
 
 export const metadata = {
-  title: "ClearPaws API Documentation",
-  description: "Interactive documentation for the ClearPaws Public API",
+  title: "PetBorder API Documentation",
+  description: "Interactive documentation for the PetBorder Public API",
 };
 
 export default function ApiDocsPage() {

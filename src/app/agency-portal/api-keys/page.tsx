@@ -141,7 +141,7 @@ export default function AgencyApiKeysPage() {
         ) : keys.length === 0 ? (
           <div className="py-16 text-center">
             <p className="text-gray-500 text-sm">
-              No API keys yet. Create one to start using the ClearPaws API.
+              No API keys yet. Create one to start using the PetBorder API.
             </p>
           </div>
         ) : (

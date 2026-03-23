@@ -83,15 +83,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // Send admin email if any changes were detected
   if (changedUrls.length > 0) {
     const adminEmail = process.env.ADMIN_EMAIL;
-    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN ?? "clearpaws.com.au";
+    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN ?? "petborder.com";
 
     if (adminEmail) {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
-          from: `ClearPaws <noreply@${baseDomain}>`,
+          from: `PetBorder <noreply@${baseDomain}>`,
           to: adminEmail,
-          subject: "ClearPaws DAFF Alert — Rule Change Detected",
+          subject: "PetBorder DAFF Alert — Rule Change Detected",
           text: [
             "One or more DAFF pages have changed.",
             "",
@@ -100,7 +100,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             "",
             `Review at: https://${baseDomain}/admin/daff-monitor`,
             "",
-            "ClearPaws continues using the previous verified rules until you mark the change as reviewed.",
+            "PetBorder continues using the previous verified rules until you mark the change as reviewed.",
           ].join("\n"),
         });
       } catch (emailErr) {

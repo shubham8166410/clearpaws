@@ -65,7 +65,7 @@ export function stripBoilerplate(html: string): string {
 export async function fetchPageContent(url: string): Promise<string | null> {
   try {
     const response = await fetch(url, {
-      headers: { 'User-Agent': 'ClearPaws-DAFF-Monitor/1.0' },
+      headers: { 'User-Agent': 'PetBorder-DAFF-Monitor/1.0' },
       signal: AbortSignal.timeout(15_000),
     });
 

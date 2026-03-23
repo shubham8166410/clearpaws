@@ -10,7 +10,7 @@ export default function NotFound() {
         This page doesn't exist. Let's get your pet's journey back on track.
       </p>
       <Link href="/">
-        <Button>← Back to ClearPaws</Button>
+        <Button>← Back to PetBorder</Button>
       </Link>
     </div>
   );

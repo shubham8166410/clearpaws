@@ -227,11 +227,11 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center gap-1 group"
-            aria-label="ClearPaws — Home"
+            aria-label="PetBorder — Home"
           >
             <LogoPaw size={36} />
             <span className="font-extrabold text-xl text-brand-600 tracking-tight">
-              ClearPaws
+              PetBorder
             </span>
           </Link>
 

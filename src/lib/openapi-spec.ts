@@ -1,23 +1,23 @@
 /**
- * OpenAPI 3.0 specification for the ClearPaws Public API.
+ * OpenAPI 3.0 specification for the PetBorder Public API.
  * Do NOT import Zod or any internal implementation details here.
  */
 
 export const openApiSpec = {
   openapi: "3.0.0",
   info: {
-    title: "ClearPaws API",
+    title: "PetBorder API",
     version: "1.0.0",
     description:
       "AI-powered pet travel compliance API for Australia. Generate DAFF-compliant timelines and look up country classifications.",
     contact: {
-      name: "ClearPaws Support",
-      url: "https://clearpaws.com.au",
+      name: "PetBorder Support",
+      url: "https://petborder.com",
     },
   },
   servers: [
     {
-      url: "https://api.clearpaws.com.au",
+      url: "https://api.petborder.com",
       description: "Production",
     },
   ],

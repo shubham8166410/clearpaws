@@ -47,10 +47,10 @@ export default async function AgencyPortalLayout({
           <p className="text-gray-600">
             You don&apos;t have a white-label agency account. Contact us at{" "}
             <a
-              href="mailto:hello@clearpaws.com.au"
+              href="mailto:hello@petborder.com"
               className="text-brand-600 hover:underline font-medium"
             >
-              hello@clearpaws.com.au
+              hello@petborder.com
             </a>{" "}
             to get started.
           </p>
@@ -91,7 +91,7 @@ export default async function AgencyPortalLayout({
                 {agencyRow.name}
               </span>
               <span className="ml-2 text-sm text-gray-500">
-                · ClearPaws Agency Portal
+                · PetBorder Agency Portal
               </span>
             </div>
             <span className="rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700">

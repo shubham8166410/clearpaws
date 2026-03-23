@@ -17,7 +17,7 @@ export default function GenerateError({
       <h2 className="text-xl font-bold text-gray-900">Something went wrong</h2>
       <p className="text-sm text-gray-500 max-w-sm">
         We hit an unexpected error. Please try again, and if the problem persists{" "}
-        <a href="mailto:help@clearpaws.com.au" className="underline">
+        <a href="mailto:help@petborder.com" className="underline">
           contact us
         </a>
         .
