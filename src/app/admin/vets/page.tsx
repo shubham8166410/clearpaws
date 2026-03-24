@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { getUserRole } from "@/lib/subscription";
 import { VetVerificationTable } from "./VetVerificationTable";
 import type { AdminVetListItem } from "@/app/api/admin/vets/route";
+
+export const metadata: Metadata = {
+  title: "Vet Verification | PetBorder Admin",
+};
 import type { VetProfileRow, VetClinicRow, ProfileRow } from "@/types/database";
 
 export const dynamic = "force-dynamic";

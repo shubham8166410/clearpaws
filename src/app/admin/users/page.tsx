@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { createServiceClient } from "@/lib/supabase/server";
 import type { AdminUser } from "@/types/admin";
+
+export const metadata: Metadata = {
+  title: "Users | PetBorder Admin",
+};
 
 const PAGE_SIZE = 20;
 

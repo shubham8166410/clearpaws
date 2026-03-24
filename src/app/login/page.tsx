@@ -6,6 +6,7 @@ import { PawPrint } from "@/components/icons/PawPrint";
 
 export const metadata: Metadata = {
   title: "Sign in to PetBorder",
+  robots: { index: false, follow: false },
 };
 
 export default function LoginPage() {

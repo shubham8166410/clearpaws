@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import type { VetProfileRow } from "@/types/database";
+
+export const metadata: Metadata = {
+  title: "Vet Portal | PetBorder",
+  robots: { index: false, follow: false },
+};
 
 interface Props {
   children: React.ReactNode;

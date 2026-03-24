@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { getUserRole } from "@/lib/subscription";
 import type { AdminStats } from "@/types/admin";
+
+export const metadata: Metadata = {
+  title: "Admin Dashboard | PetBorder",
+};
 
 // ── Data fetching helpers ─────────────────────────────────────────────────────
 

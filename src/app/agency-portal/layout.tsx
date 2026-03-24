@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { AgencyPortalProvider } from "./AgencyPortalProvider";
@@ -6,6 +7,11 @@ import { ActivateButton } from "./ActivateButton";
 import type { AgencyRow } from "@/types/database";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Agency Portal | PetBorder",
+  robots: { index: false, follow: false },
+};
 
 export default async function AgencyPortalLayout({
   children,

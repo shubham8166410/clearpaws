@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroAnimation } from "@/components/icons/HeroAnimation";
 import { PawPrint } from "@/components/icons/PawPrint";
+import { WebSiteSchema, OrganizationSchema, SoftwareApplicationSchema } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
   title: "PetBorder — Pet Travel to & from Australia. Know Exactly What to Do.",
@@ -70,6 +71,9 @@ function CheckIcon() {
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen">
+      <WebSiteSchema />
+      <OrganizationSchema />
+      <SoftwareApplicationSchema />
       <Header />
 
       <main className="flex-1">

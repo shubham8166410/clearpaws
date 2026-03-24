@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { getUserRole } from "@/lib/subscription";
 import { AcquisitionDashboard } from "./AcquisitionDashboard";
 import type { AcquisitionStats } from "@/types/admin";
 import type { ApiSuccessResponse } from "@/types/api";
+
+export const metadata: Metadata = {
+  title: "Acquisition Analytics | PetBorder Admin",
+};
 
 export const dynamic = "force-dynamic";
 
