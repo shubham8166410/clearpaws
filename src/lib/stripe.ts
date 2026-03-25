@@ -11,7 +11,7 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 /** One-time PDF document pack */
 export const PRICE_ID = process.env.STRIPE_PRICE_ID!;
-export const AMOUNT_CENTS = 4900; // $49 AUD
+export const AMOUNT_CENTS = 1500; // $15 AUD
 
 /** Monthly subscription — $9.90 AUD/mo */
 export const SUBSCRIPTION_PRICE_ID = process.env.STRIPE_SUBSCRIPTION_PRICE_ID!;

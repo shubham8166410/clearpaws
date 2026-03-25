@@ -19,7 +19,7 @@ const ROLE_LABELS: Record<UserRole, string> = {
 
 const PLAN_PRICE: Record<UserRole, string> = {
   free: "",
-  paid_once: "$49 AUD one-time",
+  paid_once: "$15 AUD one-time",
   subscriber: "$9.90/mo AUD",
   admin: "",
 };
@@ -30,7 +30,7 @@ const UPGRADE_TITLES: Partial<Record<UserRole, string>> = {
 };
 
 const UPGRADE_BUTTONS: Partial<Record<UserRole, string>> = {
-  paid_once: "Get my document pack — $49 AUD",
+  paid_once: "Get my document pack — $15 AUD",
   subscriber: "Subscribe — $9.90/mo AUD",
 };
 

@@ -12,7 +12,7 @@ function errorResponse(message: string, code: string, status: number) {
   return NextResponse.json({ error: message, code } satisfies ApiErrorResponse, { status });
 }
 
-/** POST /api/checkout — create a Stripe Checkout session for the $49 AUD document pack */
+/** POST /api/checkout — create a Stripe Checkout session for the $15 AUD document pack */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const supabase = await createClient();
 

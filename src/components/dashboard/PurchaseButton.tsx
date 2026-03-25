@@ -62,7 +62,7 @@ export function PurchaseButton({ timelineId, hasPurchase }: PurchaseButtonProps)
     <div className="bg-white border border-card-border rounded-2xl p-5">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="flex-1 min-w-0">
-          <h2 className="font-bold text-gray-900">Full document pack — $49 AUD</h2>
+          <h2 className="font-bold text-gray-900">Full document pack — $15 AUD</h2>
           <p className="text-sm text-gray-500 mt-1">
             Get a professionally formatted PDF checklist, vet certificate templates, and
             step-by-step DAFF document guide tailored to your timeline.

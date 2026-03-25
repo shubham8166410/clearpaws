@@ -54,7 +54,7 @@ export default function TermsPage() {
             </p>
             <ul className="list-disc list-inside space-y-1.5 mt-3 text-sm">
               <li><strong>Free:</strong> generate up to 5 timelines per day (rate limited by IP address)</li>
-              <li><strong>Document pack ($49 AUD):</strong> one-time purchase for a downloadable PDF compliance pack</li>
+              <li><strong>Document pack ($15 AUD):</strong> one-time purchase for a downloadable PDF compliance pack</li>
               <li><strong>Subscription ($9.90 AUD/month):</strong> save timelines, progress tracking, deadline reminders, and priority access to new features</li>
               <li><strong>Agency/white-label plans:</strong> subject to a separate B2B agreement</li>
             </ul>
@@ -99,7 +99,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-gray-900 mb-3">4. Payments and refunds</h2>
 
-            <h3 className="font-semibold text-gray-800 mb-2 text-sm">Document pack ($49 AUD — one-time)</h3>
+            <h3 className="font-semibold text-gray-800 mb-2 text-sm">Document pack ($15 AUD — one-time)</h3>
             <p className="text-sm mb-4">
               Payment is processed by Stripe. Due to the digital nature of the product, the document pack is non-refundable once downloaded. If you have not yet downloaded your pack and experience a technical issue, contact us within 7 days for a full refund.
             </p>
