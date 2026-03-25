@@ -78,7 +78,7 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* -- Hero -- */}
-        <section className="bg-paw-pattern bg-surface px-4 pt-10 pb-16 sm:pt-14 sm:pb-20">
+        <section className="bg-paw-pattern bg-surface px-4 pt-6 pb-10 sm:pt-14 sm:pb-20">
           <div className="max-w-5xl mx-auto">
             <div className="flex flex-col-reverse lg:grid lg:grid-cols-[3fr_2fr] gap-8 lg:gap-10 items-center">
               {/* Text side (visually second on mobile via flex-col-reverse, first on desktop) */}
@@ -88,12 +88,12 @@ export default function LandingPage() {
                   Free • Built on verified DAFF requirements
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight tracking-tight">
+                <h1 className="font-extrabold text-gray-900 leading-tight tracking-tight" style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}>
                   Moving your pet to Australia or overseas?{" "}
                   <span className="text-brand-600">Know every step before you book.</span>
                 </h1>
 
-                <p className="text-base sm:text-lg text-gray-600 max-w-lg mx-auto lg:mx-0">
+                <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-lg mx-auto lg:mx-0">
                   Answer 3 quick questions and get a personalised step-by-step plan — every deadline, cost, and requirement mapped out for your exact situation.
                 </p>
 
@@ -101,14 +101,14 @@ export default function LandingPage() {
                   <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                     <Link
                       href="/generate"
-                      className="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-base font-semibold px-6 py-4 rounded-2xl transition-colors shadow-lg shadow-brand-600/20 min-h-[56px]"
+                      className="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm sm:text-base font-semibold px-6 py-3 sm:py-4 rounded-2xl transition-colors shadow-lg shadow-brand-600/20 min-h-[52px] sm:min-h-[56px] w-full sm:w-auto"
                     >
                       <span aria-hidden="true">✈️🇦🇺</span>
                       Bringing pet to Australia →
                     </Link>
                     <Link
                       href="/outbound"
-                      className="inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-base font-semibold px-6 py-4 rounded-2xl transition-colors shadow-lg shadow-accent-500/20 min-h-[56px]"
+                      className="inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-sm sm:text-base font-semibold px-6 py-3 sm:py-4 rounded-2xl transition-colors shadow-lg shadow-accent-500/20 min-h-[52px] sm:min-h-[56px] w-full sm:w-auto"
                     >
                       <span aria-hidden="true">🇦🇺✈️</span>
                       Taking pet overseas →
@@ -124,7 +124,7 @@ export default function LandingPage() {
 
               {/* Animation — top on mobile, right column on desktop */}
               <div className="flex justify-center lg:justify-end">
-                <HeroAnimation className="w-[200px] h-[200px] lg:w-[300px] lg:h-[300px]" />
+                <HeroAnimation className="w-[140px] h-[140px] sm:w-[200px] sm:h-[200px] lg:w-[300px] lg:h-[300px]" />
               </div>
             </div>
           </div>

@@ -185,7 +185,7 @@ const STEP_LABELS = ["Your pet", "Origin", "Travel date"];
 // ── Dog SVG icon ─────────────────────────────────────────────────────────────
 function DogIcon({ active }: { active: boolean }) {
   return (
-    <svg viewBox="0 0 64 64" className="w-12 h-12" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 64 64" className="w-10 h-10 sm:w-12 sm:h-12" fill="none" aria-hidden="true">
       <ellipse cx="32" cy="44" rx="20" ry="14" fill={active ? "#1B4F72" : "#D1D5DB"} />
       <circle cx="32" cy="24" r="14" fill={active ? "#1B4F72" : "#D1D5DB"} />
       <ellipse cx="22" cy="14" rx="6" ry="10" fill={active ? "#154360" : "#9CA3AF"} transform="rotate(-15 22 14)" />
@@ -202,7 +202,7 @@ function DogIcon({ active }: { active: boolean }) {
 
 function CatIcon({ active }: { active: boolean }) {
   return (
-    <svg viewBox="0 0 64 64" className="w-12 h-12" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 64 64" className="w-10 h-10 sm:w-12 sm:h-12" fill="none" aria-hidden="true">
       <ellipse cx="32" cy="46" rx="18" ry="12" fill={active ? "#1B4F72" : "#D1D5DB"} />
       <circle cx="32" cy="26" r="16" fill={active ? "#1B4F72" : "#D1D5DB"} />
       {/* Triangle ears */}
@@ -366,7 +366,7 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
                     onClick={() => dispatch({ type: "SET_PET_TYPE", petType: type })}
                     aria-pressed={active}
                     className={[
-                      "flex flex-col items-center gap-3 p-5 rounded-2xl border-2 transition-all duration-150 min-h-[120px]",
+                      "flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-5 rounded-2xl border-2 transition-all duration-150 min-h-[100px] sm:min-h-[120px] w-full",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-600",
                       active
                         ? "border-brand-600 bg-brand-50 shadow-sm"
@@ -414,7 +414,7 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
             onClick={() => dispatch({ type: "NEXT_STEP" })}
             disabled={!canGoToStep2}
             size="md"
-            className="w-full sm:w-auto"
+            className="w-full"
           >
             Continue →
           </Button>

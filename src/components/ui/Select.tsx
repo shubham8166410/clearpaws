@@ -46,14 +46,18 @@ export function Select({
     : options;
 
   useEffect(() => {
-    function handler(e: MouseEvent) {
+    function handler(e: MouseEvent | TouchEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
         setQuery("");
       }
     }
     document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler as EventListener);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler as EventListener);
+    };
   }, []);
 
   function handleSelect(opt: SelectOption) {
@@ -110,7 +114,7 @@ export function Select({
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute z-50 top-full mt-1.5 w-full bg-white border border-card-border rounded-2xl shadow-xl overflow-hidden">
+        <div className="absolute z-50 top-full mt-1.5 left-0 right-0 bg-white border border-card-border rounded-2xl shadow-xl overflow-hidden">
           <div className="p-2.5 border-b border-gray-100">
             <input
               ref={inputRef}
@@ -121,6 +125,7 @@ export function Select({
               onKeyDown={handleKeyDown}
               placeholder="Type to search…"
               className="w-full px-3 py-2 text-sm rounded-lg border border-card-border focus:outline-none focus:ring-2 focus:ring-brand-600 placeholder-gray-400"
+              style={{ fontSize: "16px" }}
               aria-label={label ? `Search ${label}` : "Search"}
               autoComplete="off"
             />
