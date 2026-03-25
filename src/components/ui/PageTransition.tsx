@@ -31,7 +31,7 @@ export function PageTransition({ children }: PageTransitionProps) {
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={{ duration: 0.25, ease: "easeOut" }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
         // flex-col + flex-1 so it fills the body's flex column without
         // collapsing or disrupting the layout — must NOT use display:contents
         // as that removes the box model and breaks all framer-motion transforms.

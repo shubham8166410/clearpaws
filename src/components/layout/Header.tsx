@@ -156,8 +156,7 @@ export function Header() {
       .then(({ data }) => { setUser(data.user); })
       .catch(() => { setUser(null); })
       .finally(() => {
-        // Small delay so the skeleton doesn't flash on fast connections
-        authTimerRef.current = setTimeout(() => setAuthReady(true), 80);
+        setAuthReady(true);
       });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -166,7 +165,7 @@ export function Header() {
       authTimerRef.current = setTimeout(() => {
         setUser(session?.user ?? null);
         setAuthReady(true);
-      }, 150);
+      }, 50);
 
       if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
         router.refresh();
