@@ -317,9 +317,16 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
 
   // Show result
   if (state.result) {
+    const input: TimelineInput = {
+      petType: state.petType!,
+      petBreed: state.petBreed,
+      originCountry: state.originCountry,
+      travelDate: state.travelDate,
+    };
     return (
       <TimelineResult
         result={state.result}
+        input={input}
         savedTimelineId={state.savedTimelineId}
         onReset={() => dispatch({ type: "RESET" })}
       />

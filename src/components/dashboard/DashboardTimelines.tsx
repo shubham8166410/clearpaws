@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import type { TimelineRow, SavedOutboundSteps } from "@/types/database";
+import { getPendingTimeline, clearPendingTimeline } from "@/lib/pending-timeline";
 
 const CatEmptyAnimation = dynamic(
   () => import("@/components/icons/LottieCatEmpty").then((m) => m.LottieCatEmpty),
@@ -245,17 +247,177 @@ function EmptyState() {
 
 // ── Main component ─────────────────────────────────────────────────────────
 
-interface DashboardTimelinesProps {
-  initialTimelines: TimelineRow[];
+type SortKey = "newest" | "oldest" | "travel_soonest" | "travel_latest";
+type DirectionFilter = "all" | "inbound" | "outbound";
+type StatusFilter = "all" | "not_started" | "in_progress" | "complete";
+
+const SORT_STORAGE_KEY = "petborder_dashboard_sort";
+
+function getTotalSteps(t: TimelineRow): number {
+  if (isOutbound(t)) return getOutboundSteps(t)?.steps.length ?? 0;
+  return ((t.generated_steps as { steps?: unknown[] }).steps?.length ?? 0);
 }
 
-export function DashboardTimelines({ initialTimelines }: DashboardTimelinesProps) {
+interface DashboardTimelinesProps {
+  initialTimelines: TimelineRow[];
+  progressCounts?: Record<string, number>;
+  restorePending?: boolean;
+}
+
+export function DashboardTimelines({ initialTimelines, progressCounts = {}, restorePending }: DashboardTimelinesProps) {
+  const router = useRouter();
   const [timelines, setTimelines] = useState<TimelineRow[]>(initialTimelines);
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [undoVisible, setUndoVisible] = useState(false);
   const [undoTimeline, setUndoTimeline] = useState<TimelineRow | null>(null);
+  const [restoreBanner, setRestoreBanner] = useState<"saving" | "saved" | "error" | null>(null);
+
+  // ── Sort / filter / search state ────────────────────────────────────────
+  const [sortBy, setSortBy] = useState<SortKey>("newest");
+  const [filterDirection, setFilterDirection] = useState<DirectionFilter>("all");
+  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  // Restore sort preference from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(SORT_STORAGE_KEY) as SortKey | null;
+      if (saved && ["newest", "oldest", "travel_soonest", "travel_latest"].includes(saved)) {
+        setSortBy(saved);
+      }
+    } catch { /* localStorage unavailable */ }
+  }, []);
+
+  // Persist sort preference
+  const handleSortChange = useCallback((value: SortKey) => {
+    setSortBy(value);
+    try { localStorage.setItem(SORT_STORAGE_KEY, value); } catch { /* ignore */ }
+  }, []);
+
+  // Debounce search input (300 ms)
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(searchQuery), 300);
+    return () => clearTimeout(id);
+  }, [searchQuery]);
+
+  // Clear all filters
+  const handleClearFilters = useCallback(() => {
+    setFilterDirection("all");
+    setFilterStatus("all");
+    setSearchQuery("");
+    setDebouncedSearch("");
+  }, []);
+
+  // Computed display list
+  const displayedTimelines = useMemo(() => {
+    let result = [...timelines];
+
+    // Direction filter
+    if (filterDirection !== "all") {
+      result = result.filter((t) => t.direction === filterDirection);
+    }
+
+    // Status filter
+    if (filterStatus !== "all") {
+      result = result.filter((t) => {
+        const total = getTotalSteps(t);
+        const completed = progressCounts[t.id] ?? 0;
+        const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+        if (filterStatus === "not_started") return pct === 0;
+        if (filterStatus === "in_progress") return pct > 0 && pct < 100;
+        if (filterStatus === "complete") return pct === 100;
+        return true;
+      });
+    }
+
+    // Search
+    if (debouncedSearch.trim()) {
+      const q = debouncedSearch.toLowerCase();
+      result = result.filter(
+        (t) =>
+          t.origin_country?.toLowerCase().includes(q) ||
+          t.destination_country?.toLowerCase().includes(q) ||
+          t.pet_type?.toLowerCase().includes(q) ||
+          t.pet_breed?.toLowerCase().includes(q)
+      );
+    }
+
+    // Sort
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case "newest":
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case "oldest":
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case "travel_soonest":
+          return new Date(a.travel_date).getTime() - new Date(b.travel_date).getTime();
+        case "travel_latest":
+          return new Date(b.travel_date).getTime() - new Date(a.travel_date).getTime();
+        default:
+          return 0;
+      }
+    });
+
+    return result;
+  }, [timelines, sortBy, filterDirection, filterStatus, debouncedSearch, progressCounts]);
 
   const undoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Issue 2 — restore pending timeline after sign-in redirect
+  useEffect(() => {
+    if (!restorePending) return;
+
+    const pending = getPendingTimeline();
+    if (!pending) {
+      // No pending data (expired or already cleared) — clean up URL
+      router.replace("/dashboard");
+      return;
+    }
+
+    setRestoreBanner("saving");
+
+    fetch("/api/timelines", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ input: pending.input, output: pending.output }),
+    })
+      .then(async (r) => (r.ok ? r.json() : null))
+      .then((saved: { id: string } | null) => {
+        clearPendingTimeline();
+        if (saved?.id) {
+          // Prepend the newly saved timeline to state
+          const newRow: Partial<TimelineRow> = {
+            id: saved.id,
+            direction: "inbound",
+            origin_country: pending.input.originCountry,
+            travel_date: pending.input.travelDate,
+            pet_type: pending.input.petType,
+            pet_breed: pending.input.petBreed,
+            daff_group: pending.output.originGroup,
+            generated_steps: {
+              steps: pending.output.steps,
+              warnings: pending.output.warnings,
+              totalEstimatedCostAUD: pending.output.totalEstimatedCostAUD,
+              quarantineDays: pending.output.quarantineDays,
+              earliestTravelDate: pending.output.earliestTravelDate,
+              summary: pending.output.summary,
+            } as TimelineRow["generated_steps"],
+            created_at: new Date().toISOString(),
+          };
+          setTimelines((prev) => [newRow as TimelineRow, ...prev]);
+          setRestoreBanner("saved");
+        } else {
+          setRestoreBanner("error");
+        }
+        router.replace("/dashboard");
+      })
+      .catch(() => {
+        clearPendingTimeline();
+        setRestoreBanner("error");
+        router.replace("/dashboard");
+      });
+  }, []); // run once on mount
 
   const handleDeleteRequest = useCallback((id: string) => {
     setConfirmingId(id);
@@ -323,29 +485,122 @@ export function DashboardTimelines({ initialTimelines }: DashboardTimelinesProps
     setUndoTimeline(null);
   }, [undoTimeline]);
 
-  if (timelines.length === 0 && !undoVisible) {
+  if (timelines.length === 0) {
     return (
       <>
         <EmptyState />
-        <UndoToast visible={false} onUndo={handleUndo} />
+        <UndoToast visible={undoVisible} onUndo={handleUndo} />
       </>
     );
   }
 
   return (
     <>
-      <div className="flex flex-col gap-3">
-        {timelines.map((t) => (
-          <TimelineCard
-            key={t.id}
-            timeline={t}
-            onDeleteRequest={handleDeleteRequest}
-            confirmingId={confirmingId}
-            onConfirm={handleConfirmDelete}
-            onCancelConfirm={handleCancelConfirm}
-          />
+      {/* Restore-pending banner */}
+      {restoreBanner === "saving" && (
+        <div role="status" className="mb-4 flex items-center gap-2 text-sm text-brand-700 bg-brand-50 border border-brand-100 px-4 py-3 rounded-xl">
+          <svg className="w-4 h-4 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          </svg>
+          Saving your timeline…
+        </div>
+      )}
+      {restoreBanner === "saved" && (
+        <div role="status" className="mb-4 text-sm text-green-800 bg-green-50 border border-green-200 px-4 py-3 rounded-xl">
+          ✓ Your timeline has been saved!
+        </div>
+      )}
+      {restoreBanner === "error" && (
+        <div role="alert" className="mb-4 text-sm text-red-800 bg-red-50 border border-red-200 px-4 py-3 rounded-xl">
+          Could not save your timeline. Please generate it again.
+        </div>
+      )}
+      {/* ── Controls bar ─────────────────────────────────────────────── */}
+      <div className="flex flex-wrap gap-2 mb-4 items-center">
+        {/* Sort */}
+        <label className="sr-only" htmlFor="timeline-sort">Sort timelines</label>
+        <select
+          id="timeline-sort"
+          aria-label="Sort timelines"
+          value={sortBy}
+          onChange={(e) => handleSortChange(e.target.value as SortKey)}
+          className="text-sm border border-card-border rounded-xl px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-600 min-h-[40px]"
+        >
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="travel_soonest">Travel date — soonest</option>
+          <option value="travel_latest">Travel date — latest</option>
+        </select>
+
+        {/* Direction pills */}
+        {(["all", "inbound", "outbound"] as DirectionFilter[]).map((dir) => (
+          <button
+            key={dir}
+            type="button"
+            onClick={() => setFilterDirection(dir)}
+            aria-pressed={filterDirection === dir}
+            className={[
+              "text-sm font-medium px-3 py-1.5 rounded-full border transition-colors min-h-[36px]",
+              filterDirection === dir
+                ? "bg-brand-600 text-white border-brand-600"
+                : "bg-white text-gray-600 border-card-border hover:border-brand-200",
+            ].join(" ")}
+          >
+            {dir === "all" ? "All" : dir === "inbound" ? "To Australia" : "From Australia"}
+          </button>
         ))}
+
+        {/* Status filter */}
+        <select
+          aria-label="Filter by status"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
+          className="text-sm border border-card-border rounded-xl px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-600 min-h-[40px]"
+        >
+          <option value="all">All statuses</option>
+          <option value="not_started">Not started</option>
+          <option value="in_progress">In progress</option>
+          <option value="complete">Complete</option>
+        </select>
+
+        {/* Search */}
+        <input
+          type="search"
+          aria-label="Search timelines"
+          placeholder="Search by country or pet…"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="flex-1 min-w-[160px] text-sm border border-card-border rounded-xl px-3 py-2 bg-white text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-600 min-h-[40px]"
+        />
       </div>
+
+      {/* Empty filtered state — NOT the cat animation */}
+      {displayedTimelines.length === 0 && timelines.length > 0 ? (
+        <div className="text-center py-12 border border-dashed border-card-border rounded-2xl">
+          <p className="text-gray-500 text-sm mb-3">No timelines match your filters.</p>
+          <button
+            type="button"
+            onClick={handleClearFilters}
+            className="text-sm font-medium text-brand-600 hover:underline"
+          >
+            Clear filters
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {displayedTimelines.map((t) => (
+            <TimelineCard
+              key={t.id}
+              timeline={t}
+              onDeleteRequest={handleDeleteRequest}
+              confirmingId={confirmingId}
+              onConfirm={handleConfirmDelete}
+              onCancelConfirm={handleCancelConfirm}
+            />
+          ))}
+        </div>
+      )}
       <UndoToast visible={undoVisible} onUndo={handleUndo} />
     </>
   );

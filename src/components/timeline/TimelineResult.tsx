@@ -1,17 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import type { TimelineOutput } from "@/types/timeline";
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import type { TimelineOutput, TimelineInput } from "@/types/timeline";
 import type { AgencyRow } from "@/types/database";
 import type { QuarantineAvailability } from "@/lib/mickleham";
 import { TimelineStep } from "./TimelineStep";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { DAFF_RULES } from "@/lib/daff-rules";
+import { savePendingTimeline } from "@/lib/pending-timeline";
+
+const paymentsEnabled =
+  process.env.NEXT_PUBLIC_PAYMENTS_ENABLED === "true";
 
 interface TimelineResultProps {
   result: TimelineOutput;
+  input: TimelineInput;
   savedTimelineId: string | null;
   onReset: () => void;
 }
@@ -170,10 +176,16 @@ function handleEmailSelf(result: TimelineOutput) {
   window.location.href = `mailto:?subject=${subject}&body=${body}`;
 }
 
-export function TimelineResult({ result, savedTimelineId, onReset }: TimelineResultProps) {
+export function TimelineResult({ result, input, savedTimelineId, onReset }: TimelineResultProps) {
+  const router = useRouter();
   const group = groupInfo[result.originGroup];
   const criticalWarnings = result.warnings.filter((w) => w.severity === "critical");
   const otherWarnings = result.warnings.filter((w) => w.severity !== "critical");
+
+  const handleSignInToSave = useCallback(() => {
+    savePendingTimeline({ input, output: result });
+    router.push("/login?redirectTo=/dashboard%3FrestorePending%3Dtrue");
+  }, [input, result, router]);
   const micklehamStatus = useMicklehamStatus();
 
   // Check if travel date is very soon (< 60 days)
@@ -326,7 +338,7 @@ export function TimelineResult({ result, savedTimelineId, onReset }: TimelineRes
           </svg>
           Print
         </button>
-        {savedTimelineId ? (
+        {savedTimelineId && paymentsEnabled ? (
           <Link
             href={`/dashboard/timelines/${savedTimelineId}`}
             className="inline-flex items-center gap-2 text-sm font-medium text-brand-600 bg-brand-50 hover:bg-brand-100 border border-brand-100 px-4 py-2.5 rounded-xl transition-colors min-h-[44px]"
@@ -337,17 +349,26 @@ export function TimelineResult({ result, savedTimelineId, onReset }: TimelineRes
             </svg>
             Download PDF — $15 AUD
           </Link>
-        ) : (
-          <Link
-            href="/login"
+        ) : !savedTimelineId ? (
+          <button
+            type="button"
+            onClick={handleSignInToSave}
             className="inline-flex items-center gap-2 text-sm font-medium text-brand-600 bg-brand-50 hover:bg-brand-100 border border-brand-100 px-4 py-2.5 rounded-xl transition-colors min-h-[44px]"
             aria-label="Sign in to save this timeline and get the PDF"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
-            Sign in to get PDF
-          </Link>
+            Sign in to save
+          </button>
+        ) : (
+          /* savedTimelineId exists but payments disabled — show coming soon */
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 px-4 py-2.5 rounded-xl min-h-[44px] cursor-not-allowed">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+            PDF — Coming Soon
+          </span>
         )}
       </div>
 

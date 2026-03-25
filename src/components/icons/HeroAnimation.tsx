@@ -8,7 +8,7 @@ const LottieHero = dynamic(
     ssr: false,
     // Transparent placeholder — same dimensions as the Lottie so no layout shift
     loading: () => (
-      <div className="w-[200px] h-[200px] lg:w-[300px] lg:h-[300px]" aria-hidden="true" />
+      <div className="w-[180px] h-[180px] sm:w-[260px] sm:h-[260px] lg:w-[380px] lg:h-[380px]" aria-hidden="true" />
     ),
   }
 );

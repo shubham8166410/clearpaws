@@ -124,7 +124,7 @@ export default function LandingPage() {
 
               {/* Animation — top on mobile, right column on desktop */}
               <div className="flex justify-center lg:justify-end">
-                <HeroAnimation className="w-[140px] h-[140px] sm:w-[200px] sm:h-[200px] lg:w-[300px] lg:h-[300px]" />
+                <HeroAnimation className="w-[180px] h-[180px] sm:w-[260px] sm:h-[260px] lg:w-[380px] lg:h-[380px] lg:-mr-8" />
               </div>
             </div>
           </div>
