@@ -1,8 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Lottie from "lottie-react";
-import dogAnimation from "@/assets/animations/dog love.json";
+import dynamic from "next/dynamic";
+
+const DogSuccessAnimation = dynamic(
+  () => import("@/components/icons/LottieDogSuccess").then((m) => m.LottieDogSuccess),
+  { ssr: false }
+);
 
 interface Props {
   timelineId: string;
@@ -28,12 +32,7 @@ export function PaymentSuccessCelebration({ timelineId }: Props) {
     <div className="bg-green-50 border border-green-200 rounded-2xl p-6 flex flex-col items-center text-center gap-3">
       {showAnimation && (
         <div aria-hidden="true">
-          <Lottie
-            animationData={dogAnimation}
-            loop={false}
-            autoplay={autoplay}
-            style={{ width: 240, height: 240 }}
-          />
+          <DogSuccessAnimation autoplay={autoplay} />
         </div>
       )}
       <div>

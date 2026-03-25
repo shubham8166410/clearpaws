@@ -2,9 +2,13 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
-import Lottie from "lottie-react";
-import catAnimation from "@/assets/animations/cat-love.json";
+import dynamic from "next/dynamic";
 import type { TimelineRow, SavedOutboundSteps } from "@/types/database";
+
+const CatEmptyAnimation = dynamic(
+  () => import("@/components/icons/LottieCatEmpty").then((m) => m.LottieCatEmpty),
+  { ssr: false, loading: () => <div style={{ width: 160, height: 160 }} aria-hidden="true" /> }
+);
 
 function isOutbound(timeline: TimelineRow): boolean {
   return timeline.direction === "outbound";
@@ -223,12 +227,7 @@ function EmptyState() {
   return (
     <div className="text-center py-16 border border-dashed border-card-border rounded-2xl flex flex-col items-center">
       <div aria-hidden="true">
-        <Lottie
-          animationData={catAnimation}
-          loop={true}
-          autoplay={autoplay}
-          style={{ width: 160, height: 160 }}
-        />
+        <CatEmptyAnimation autoplay={autoplay} />
       </div>
       <h2 className="font-semibold text-gray-900 mb-1">Nothing here yet — let&apos;s change that</h2>
       <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto">
