@@ -11,21 +11,33 @@ import { DashboardTimelines } from "@/components/dashboard/DashboardTimelines";
 export const dynamic = "force-dynamic";
 
 interface DashboardPageProps {
-  searchParams: Promise<{ welcome?: string }>;
+  searchParams: Promise<{ welcome?: string; restorePending?: string }>;
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const supabase = await createClient();
-  const { welcome } = await searchParams;
+  const { welcome, restorePending } = await searchParams;
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: timelines } = await supabase
-    .from("timelines")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+  const [{ data: timelines }, { data: progressRows }] = await Promise.all([
+    supabase
+      .from("timelines")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("timeline_progress")
+      .select("timeline_id")
+      .eq("user_id", user.id),
+  ]);
+
+  // Build a map of timeline_id → completed step count
+  const progressCounts: Record<string, number> = {};
+  for (const row of progressRows ?? []) {
+    progressCounts[row.timeline_id] = (progressCounts[row.timeline_id] ?? 0) + 1;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -58,7 +70,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </div>
           </div>
 
-          <DashboardTimelines initialTimelines={timelines ?? []} />
+          <DashboardTimelines
+            initialTimelines={timelines ?? []}
+            progressCounts={progressCounts}
+            restorePending={restorePending === "true"}
+          />
         </div>
       </main>
       <Footer />

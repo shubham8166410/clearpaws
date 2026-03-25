@@ -14,6 +14,10 @@ function errorResponse(message: string, code: string, status: number) {
 
 /** POST /api/checkout — create a Stripe Checkout session for the $49 AUD document pack */
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  if (process.env.PAYMENTS_ENABLED !== "true") {
+    return errorResponse("Payments not yet available", "PAYMENTS_DISABLED", 503);
+  }
+
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();

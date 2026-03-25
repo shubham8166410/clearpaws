@@ -8,6 +8,8 @@ interface PurchaseButtonProps {
 }
 
 export function PurchaseButton({ timelineId, hasPurchase }: PurchaseButtonProps) {
+  const paymentsEnabled =
+    process.env.NEXT_PUBLIC_PAYMENTS_ENABLED === "true";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,14 +73,33 @@ export function PurchaseButton({ timelineId, hasPurchase }: PurchaseButtonProps)
             <p className="text-sm text-red-600 mt-2" role="alert">{error}</p>
           )}
         </div>
-        <button
-          type="button"
-          onClick={handleCheckout}
-          disabled={loading}
-          className="flex-shrink-0 inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors min-h-[44px] disabled:opacity-50"
-        >
-          {loading ? "Redirecting…" : "Buy document pack →"}
-        </button>
+        {paymentsEnabled ? (
+          <button
+            type="button"
+            onClick={handleCheckout}
+            disabled={loading}
+            className="flex-shrink-0 inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors min-h-[44px] disabled:opacity-50"
+          >
+            {loading ? "Redirecting…" : "Buy document pack →"}
+          </button>
+        ) : (
+          <div className="flex-shrink-0 flex flex-col items-end gap-1.5">
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              className="inline-flex items-center gap-2 bg-gray-200 text-gray-400 text-sm font-medium px-5 py-3 rounded-xl cursor-not-allowed min-h-[44px]"
+            >
+              Download Document Pack
+              <span className="text-xs bg-gray-300 text-gray-500 px-2 py-0.5 rounded-full font-normal">
+                Coming Soon
+              </span>
+            </button>
+            <p className="text-xs text-gray-400">
+              Full document pack launching soon. Your timeline is free to use now.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

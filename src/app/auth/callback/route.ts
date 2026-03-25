@@ -39,9 +39,11 @@ export async function GET(request: NextRequest) {
           new Date(user.last_sign_in_at).getTime()
         ) < 5000;
 
-      // New users land on dashboard with welcome toast; returning users go to redirectTo
+      // New users land on dashboard with welcome toast; returning users go to redirectTo.
+      // Preserve restorePending flag so a pending timeline is not lost on first sign-up.
+      const hasPending = redirectTo.includes("restorePending=true");
       const destination = isNewUser
-        ? "/dashboard?welcome=1"
+        ? `/dashboard?welcome=1${hasPending ? "&restorePending=true" : ""}`
         : redirectTo;
 
       return NextResponse.redirect(`${origin}${destination}`);
