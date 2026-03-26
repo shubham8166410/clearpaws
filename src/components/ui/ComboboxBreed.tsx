@@ -379,6 +379,8 @@ export interface ComboboxBreedProps {
   hint?: string;
   /** When true, suppress all Australian import ban indicators (for outbound context). */
   hideBanWarnings?: boolean;
+  /** When true, input is greyed out and non-interactive (e.g. no pet type selected yet). */
+  disabled?: boolean;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -393,6 +395,7 @@ export function ComboboxBreed({
   required,
   hint,
   hideBanWarnings = false,
+  disabled = false,
 }: ComboboxBreedProps) {
   const uid = useId();
   const inputId = id ?? `combobox-breed-${uid}`;
@@ -431,28 +434,22 @@ export function ComboboxBreed({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Tracks whether a list-item selection just happened, so blur doesn't clear it
+  const justSelectedRef = useRef(false);
 
-  // Filter breeds by query — include banned breeds in results
+  // Filter breeds by query — list-only, no custom entries allowed
   const query = value.trim().toLowerCase();
   const filtered = query
     ? breedData.filter((b) => b.name.toLowerCase().includes(query))
     : breedData;
 
   const exactMatch = breedData.some((b) => b.name.toLowerCase() === query);
-  const showCustom = query.length > 0 && !exactMatch;
 
-  type Option = { id: string; entry: BreedEntry | null; isCustom: boolean };
-  const options: Option[] = [];
-  if (showCustom) {
-    options.push({
-      id: `${listId}-custom`,
-      entry: { name: value.trim() },
-      isCustom: true,
-    });
-  }
-  filtered.forEach((entry, i) => {
-    options.push({ id: `${listId}-${i}`, entry, isCustom: false });
-  });
+  type Option = { id: string; entry: BreedEntry };
+  const options: Option[] = filtered.map((entry, i) => ({
+    id: `${listId}-${i}`,
+    entry,
+  }));
 
   const bannedWarning = hideBanWarnings ? null : detectBannedBreed(petType, value);
   const isSelectedExact = breedData.some(
@@ -460,6 +457,7 @@ export function ComboboxBreed({
   );
 
   function open() {
+    if (disabled) return;
     setIsOpen(true);
     setActiveIndex(-1);
   }
@@ -468,9 +466,25 @@ export function ComboboxBreed({
     setActiveIndex(-1);
   }
   function select(name: string) {
+    justSelectedRef.current = true;
     onChange(name);
     close();
     inputRef.current?.focus();
+  }
+
+  // On blur: if the typed value doesn't exactly match a breed in the list, clear it.
+  // Delayed so a mouse-click selection fires first and sets justSelectedRef.
+  function handleBlur() {
+    setTimeout(() => {
+      if (justSelectedRef.current) {
+        justSelectedRef.current = false;
+        return;
+      }
+      if (value.trim() && !exactMatch) {
+        onChange("");
+      }
+      close();
+    }, 150);
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -517,8 +531,10 @@ export function ComboboxBreed({
 
   const activeId = activeIndex >= 0 ? options[activeIndex]?.id : undefined;
 
-  // Input border/bg state (bannedWarning is null when hideBanWarnings=true, so red never shows)
-  const inputBorderClass = bannedWarning
+  // Input border/bg state
+  const inputBorderClass = disabled
+    ? "border-card-border bg-gray-50 cursor-not-allowed opacity-60"
+    : bannedWarning
     ? "border-red-400 bg-red-50"
     : isSelectedExact
     ? "border-brand-600 bg-brand-50"
@@ -554,12 +570,15 @@ export function ComboboxBreed({
             aria-haspopup="listbox"
             aria-required={required}
             aria-invalid={!!bannedWarning}
+            aria-disabled={disabled}
+            disabled={disabled}
             value={value}
-            placeholder={placeholder}
+            placeholder={disabled ? "Select a pet type first" : placeholder}
             autoComplete="off"
             spellCheck={false}
             maxLength={100}
             onFocus={open}
+            onBlur={handleBlur}
             onChange={(e) => {
               onChange(e.target.value);
               open();
@@ -636,6 +655,7 @@ export function ComboboxBreed({
               maxHeight: 320,
               overflowY: "auto",
               WebkitOverflowScrolling: "touch" as never,
+              touchAction: "pan-y",
               // Brand-tinted dropdown background
               background: "#F2F8FC",
               border: "1.5px solid #AED6F1",
@@ -666,12 +686,25 @@ export function ComboboxBreed({
               </li>
             )}
 
+            {/* No-results state */}
+            {query && options.length === 0 && (
+              <li
+                aria-live="polite"
+                style={{
+                  padding: "14px 16px",
+                  fontSize: 13,
+                  color: "#6B7280",
+                  textAlign: "center",
+                }}
+              >
+                No breeds found — try a different spelling.
+              </li>
+            )}
+
             {options.map((opt, idx) => {
-              const entry = opt.entry!;
+              const entry = opt.entry;
               const isActive = idx === activeIndex;
-              const isSelected =
-                !opt.isCustom &&
-                value.toLowerCase() === entry.name.toLowerCase();
+              const isSelected = value.toLowerCase() === entry.name.toLowerCase();
               const isBanned = !hideBanWarnings && !!entry.banned;
 
               // Colours
@@ -690,10 +723,7 @@ export function ComboboxBreed({
                 if (isActive) bg = "#FDEDEC";
               }
 
-              if (opt.isCustom) {
-                nameColor = "#E67E22";
-                fontWeight = 600;
-              } else if (isSelected || isBanned) {
+              if (isSelected || isBanned) {
                 fontWeight = 600;
               }
 
@@ -708,15 +738,27 @@ export function ComboboxBreed({
                     e.preventDefault();
                     select(entry.name);
                   }}
+                  onTouchStart={(e) => {
+                    // Record touch start Y so we can distinguish tap from scroll
+                    (e.currentTarget as HTMLLIElement).dataset.touchStartY =
+                      String(e.touches[0].clientY);
+                  }}
                   onTouchEnd={(e) => {
-                    e.preventDefault();
-                    select(entry.name);
+                    const startY = Number(
+                      (e.currentTarget as HTMLLIElement).dataset.touchStartY ?? 0
+                    );
+                    const endY = e.changedTouches[0].clientY;
+                    // Only treat as a tap if the finger moved <8px vertically
+                    if (Math.abs(endY - startY) < 8) {
+                      e.preventDefault();
+                      select(entry.name);
+                    }
                   }}
                   style={{
                     padding: "9px 14px",
                     minHeight: 44,
                     cursor: "pointer",
-                    touchAction: "manipulation",
+                    touchAction: "pan-y",
                     WebkitTapHighlightColor: "transparent",
                     background: bg,
                     display: "flex",
@@ -735,18 +777,7 @@ export function ComboboxBreed({
                       justifyContent: "center",
                     }}
                   >
-                    {opt.isCustom ? (
-                      // Pencil icon for custom entry
-                      <svg
-                        width="13"
-                        height="13"
-                        viewBox="0 0 20 20"
-                        fill="#E67E22"
-                        aria-hidden="true"
-                      >
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                      </svg>
-                    ) : isBanned ? (
+                    {isBanned ? (
                       // Prohibited icon for banned breeds
                       <svg
                         width="13"
@@ -789,9 +820,7 @@ export function ComboboxBreed({
                         lineHeight: 1.3,
                       }}
                     >
-                      {opt.isCustom
-                        ? `Use "${entry.name}" as breed name`
-                        : entry.name}
+                      {entry.name}
                     </span>
                     {isBanned && entry.bannedNote && (
                       <span
@@ -816,6 +845,13 @@ export function ComboboxBreed({
       {/* Hint */}
       {hint && !bannedWarning && (
         <p className="text-xs text-gray-500">{hint}</p>
+      )}
+
+      {/* No-match warning — shown when user typed something not in the list */}
+      {value.trim() && !exactMatch && !bannedWarning && !isOpen && (
+        <p className="text-xs text-amber-600">
+          No matching breed found — please select from the list.
+        </p>
       )}
 
       {/* Selected allowed breed highlight — inbound only */}

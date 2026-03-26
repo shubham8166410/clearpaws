@@ -393,7 +393,7 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
             </div>
           </fieldset>
 
-          {/* Breed input */}
+          {/* Breed input — disabled until pet type is chosen */}
           <ComboboxBreed
             id="pet-breed"
             petType={state.petType ?? "dog"}
@@ -402,7 +402,8 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
             value={state.petBreed}
             onChange={(breed) => dispatch({ type: "SET_PET_BREED", breed })}
             required
-            hint={state.petBreed.length === 0 ? "Type to search or enter a custom breed" : undefined}
+            disabled={!state.petType}
+            hint={state.petBreed.length === 0 ? "Type to search, then select from the list" : undefined}
           />
 
           <Button

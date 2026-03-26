@@ -311,7 +311,7 @@ export function OutboundForm() {
               placeholder={`e.g. ${state.petType === "cat" ? "Domestic Shorthair" : "Labrador Retriever"}`}
               value={state.petBreed}
               onChange={(breed) => dispatch({ type: "SET_PET_BREED", breed })}
-              hint={state.petBreed.length === 0 ? "Type to search or enter a custom breed" : undefined}
+              hint={state.petBreed.length === 0 ? "Type to search, then select from the list" : undefined}
               hideBanWarnings
             />
           )}
