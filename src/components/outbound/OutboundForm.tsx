@@ -142,7 +142,7 @@ function addDays(base: string, days: number): string {
 function PetLottieIcon({ petType, active }: { petType: "dog" | "cat"; active: boolean }) {
   return (
     <div
-      className="w-14 h-14 sm:w-16 sm:h-16"
+      className="w-20 h-20 sm:w-24 sm:h-24"
       style={{
         filter: active ? "none" : "grayscale(100%) opacity(0.4)",
         transition: "filter 200ms ease",
