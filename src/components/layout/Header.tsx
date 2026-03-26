@@ -362,9 +362,6 @@ export function Header() {
             <NavLink href="/outbound" isActive={isActive("/outbound")} prefersReduced={prefersReduced}>
               Leaving Australia
             </NavLink>
-            <NavLink href="/tools/breed-checker" isActive={isActive("/tools/breed-checker")} prefersReduced={prefersReduced}>
-              Breed Checker
-            </NavLink>
             <NavLink href="/about" isActive={isActive("/about")} prefersReduced={prefersReduced}>
               About
             </NavLink>

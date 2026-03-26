@@ -10,6 +10,9 @@ import { Alert } from "@/components/ui/Alert";
 import { StepIndicator } from "@/components/ui/StepIndicator";
 import { ComboboxBreed, detectBannedBreed } from "@/components/ui/ComboboxBreed";
 import dynamic from "next/dynamic";
+import Lottie from "lottie-react";
+import dogAnimData from "@/assets/animations/dog icon.json";
+import catAnimData from "@/assets/animations/cat.json";
 
 const LottiePawSpinner = dynamic(
   () => import("@/components/icons/LottiePawSpinner").then((m) => ({ default: m.LottiePawSpinner })),
@@ -61,7 +64,7 @@ const initialState: FormState = {
 
 function reducer(state: FormState, action: FormAction): FormState {
   switch (action.type) {
-    case "SET_PET_TYPE":    return { ...state, petType: action.petType };
+    case "SET_PET_TYPE":    return { ...state, petType: action.petType, petBreed: "" };
     case "SET_PET_BREED":   return { ...state, petBreed: action.breed };
     case "SET_COUNTRY":     return { ...state, originCountry: action.country };
     case "SET_TRAVEL_DATE": return { ...state, travelDate: action.date };
@@ -164,44 +167,24 @@ function validateTravelDate(
 
 const STEP_LABELS = ["Your pet", "Origin", "Travel date"];
 
-// ── Dog SVG icon ─────────────────────────────────────────────────────────────
-function DogIcon({ active }: { active: boolean }) {
+// ── Pet Lottie icons ──────────────────────────────────────────────────────────
+function PetLottieIcon({ petType, active }: { petType: "dog" | "cat"; active: boolean }) {
   return (
-    <svg viewBox="0 0 64 64" className="w-10 h-10 sm:w-12 sm:h-12" fill="none" aria-hidden="true">
-      <ellipse cx="32" cy="44" rx="20" ry="14" fill={active ? "#1B4F72" : "#D1D5DB"} />
-      <circle cx="32" cy="24" r="14" fill={active ? "#1B4F72" : "#D1D5DB"} />
-      <ellipse cx="22" cy="14" rx="6" ry="10" fill={active ? "#154360" : "#9CA3AF"} transform="rotate(-15 22 14)" />
-      <ellipse cx="42" cy="14" rx="6" ry="10" fill={active ? "#154360" : "#9CA3AF"} transform="rotate(15 42 14)" />
-      <circle cx="26" cy="22" r="3" fill="white" />
-      <circle cx="26" cy="22" r="1.5" fill="#1a1a1a" />
-      <circle cx="38" cy="22" r="3" fill="white" />
-      <circle cx="38" cy="22" r="1.5" fill="#1a1a1a" />
-      <ellipse cx="32" cy="30" rx="6" ry="4" fill={active ? "#154360" : "#9CA3AF"} />
-      <ellipse cx="32" cy="28" rx="3" ry="2" fill={active ? "#0E2D42" : "#6B7280"} />
-    </svg>
-  );
-}
-
-function CatIcon({ active }: { active: boolean }) {
-  return (
-    <svg viewBox="0 0 64 64" className="w-10 h-10 sm:w-12 sm:h-12" fill="none" aria-hidden="true">
-      <ellipse cx="32" cy="46" rx="18" ry="12" fill={active ? "#1B4F72" : "#D1D5DB"} />
-      <circle cx="32" cy="26" r="16" fill={active ? "#1B4F72" : "#D1D5DB"} />
-      {/* Triangle ears */}
-      <polygon points="18,16 14,4 26,12" fill={active ? "#154360" : "#9CA3AF"} />
-      <polygon points="46,16 50,4 38,12" fill={active ? "#154360" : "#9CA3AF"} />
-      <circle cx="25" cy="24" r="3" fill="white" />
-      <circle cx="25" cy="24" r="1.5" fill="#1a1a1a" />
-      <circle cx="39" cy="24" r="3" fill="white" />
-      <circle cx="39" cy="24" r="1.5" fill="#1a1a1a" />
-      <ellipse cx="32" cy="31" rx="5" ry="3" fill={active ? "#154360" : "#9CA3AF"} />
-      <ellipse cx="32" cy="30" rx="2.5" ry="1.5" fill={active ? "#0E2D42" : "#6B7280"} />
-      {/* Whiskers */}
-      <line x1="38" y1="30" x2="52" y2="27" stroke={active ? "#AED6F1" : "#D1D5DB"} strokeWidth="1.5" />
-      <line x1="38" y1="32" x2="52" y2="33" stroke={active ? "#AED6F1" : "#D1D5DB"} strokeWidth="1.5" />
-      <line x1="26" y1="30" x2="12" y2="27" stroke={active ? "#AED6F1" : "#D1D5DB"} strokeWidth="1.5" />
-      <line x1="26" y1="32" x2="12" y2="33" stroke={active ? "#AED6F1" : "#D1D5DB"} strokeWidth="1.5" />
-    </svg>
+    <div
+      className="w-14 h-14 sm:w-16 sm:h-16"
+      style={{
+        filter: active ? "none" : "grayscale(100%) opacity(0.4)",
+        transition: "filter 200ms ease",
+      }}
+      aria-hidden="true"
+    >
+      <Lottie
+        animationData={petType === "dog" ? dogAnimData : catAnimData}
+        loop={active}
+        autoplay={active}
+        style={{ width: "100%", height: "100%" }}
+      />
+    </div>
   );
 }
 
@@ -355,7 +338,7 @@ export function TimelineForm({ onResult }: TimelineFormProps = {}) {
                         : "border-card-border bg-white hover:border-gray-300",
                     ].join(" ")}
                   >
-                    {type === "dog" ? <DogIcon active={active} /> : <CatIcon active={active} />}
+                    <PetLottieIcon petType={type} active={active} />
                     <span className={`font-semibold text-sm capitalize ${active ? "text-brand-700" : "text-gray-600"}`}>
                       {type}
                     </span>

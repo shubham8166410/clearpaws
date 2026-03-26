@@ -377,6 +377,8 @@ export interface ComboboxBreedProps {
   placeholder?: string;
   required?: boolean;
   hint?: string;
+  /** When true, suppress all Australian import ban indicators (for outbound context). */
+  hideBanWarnings?: boolean;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -390,6 +392,7 @@ export function ComboboxBreed({
   placeholder,
   required,
   hint,
+  hideBanWarnings = false,
 }: ComboboxBreedProps) {
   const uid = useId();
   const inputId = id ?? `combobox-breed-${uid}`;
@@ -451,7 +454,7 @@ export function ComboboxBreed({
     options.push({ id: `${listId}-${i}`, entry, isCustom: false });
   });
 
-  const bannedWarning = detectBannedBreed(petType, value);
+  const bannedWarning = hideBanWarnings ? null : detectBannedBreed(petType, value);
   const isSelectedExact = breedData.some(
     (b) => !b.banned && b.name.toLowerCase() === query
   );
@@ -514,7 +517,7 @@ export function ComboboxBreed({
 
   const activeId = activeIndex >= 0 ? options[activeIndex]?.id : undefined;
 
-  // Input border/bg state
+  // Input border/bg state (bannedWarning is null when hideBanWarnings=true, so red never shows)
   const inputBorderClass = bannedWarning
     ? "border-red-400 bg-red-50"
     : isSelectedExact
@@ -568,12 +571,30 @@ export function ComboboxBreed({
               fontWeight: value ? 600 : 400,
             }}
             className={[
-              "w-full pl-4 pr-10 py-3 rounded-xl border text-gray-900 text-sm placeholder-gray-400",
+              "w-full pl-4 py-3 rounded-xl border text-gray-900 text-sm placeholder-gray-400",
+              value ? "pr-16" : "pr-10",
               "transition-colors duration-150 min-h-[48px]",
               "focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent",
               inputBorderClass,
             ].join(" ")}
           />
+          {/* Clear button — shown when input has a value */}
+          {value && (
+            <button
+              type="button"
+              aria-label="Clear breed"
+              onMouseDown={(e) => {
+                e.preventDefault();
+                onChange("");
+                inputRef.current?.focus();
+              }}
+              className="absolute right-8 top-1/2 -translate-y-1/2 flex items-center justify-center w-5 h-5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              <svg width="10" height="10" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
           {/* Chevron */}
           <span
             aria-hidden="true"
@@ -651,7 +672,7 @@ export function ComboboxBreed({
               const isSelected =
                 !opt.isCustom &&
                 value.toLowerCase() === entry.name.toLowerCase();
-              const isBanned = !!entry.banned;
+              const isBanned = !hideBanWarnings && !!entry.banned;
 
               // Colours
               let bg = "transparent";
@@ -797,8 +818,8 @@ export function ComboboxBreed({
         <p className="text-xs text-gray-500">{hint}</p>
       )}
 
-      {/* Selected allowed breed highlight */}
-      {isSelectedExact && !bannedWarning && (
+      {/* Selected allowed breed highlight — inbound only */}
+      {isSelectedExact && !bannedWarning && !hideBanWarnings && (
         <p className="text-xs font-semibold" style={{ color: "#1B4F72" }}>
           ✓ {value} — allowed to enter Australia
         </p>

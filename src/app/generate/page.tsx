@@ -3,7 +3,6 @@ import Link from "next/link";
 import { TimelineForm } from "@/components/timeline/TimelineForm";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { PawPrint } from "@/components/icons/PawPrint";
 
 export const metadata: Metadata = {
   title: "Generate Your Pet Travel Timeline",
@@ -20,8 +19,12 @@ export default function GeneratePage() {
         <div className="max-w-2xl mx-auto">
           {/* Page intro */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-50 mb-4">
-              <PawPrint className="w-7 h-7 text-brand-600" aria-hidden="true" />
+            <div className="inline-flex items-center gap-1 px-4 py-2.5 rounded-2xl bg-brand-50 mb-4" aria-hidden="true">
+              <span className="text-2xl">🐾</span>
+              <span className="text-lg text-brand-300 font-light mx-0.5">→</span>
+              <span className="text-2xl">✈️</span>
+              <span className="text-lg text-brand-300 font-light mx-0.5">→</span>
+              <span className="text-2xl">🇦🇺</span>
             </div>
             <h1 className="text-2xl font-bold text-gray-900">
               Plan your pet&apos;s Australian arrival
